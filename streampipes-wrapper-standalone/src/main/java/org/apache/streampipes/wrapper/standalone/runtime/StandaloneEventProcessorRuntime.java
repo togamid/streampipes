@@ -86,7 +86,7 @@ public class StandaloneEventProcessorRuntime<B extends EventProcessorBindingPara
 
   @Override
   public void bindEngine() throws SpRuntimeException {
-    engine.onInvocation(params.getBindingParams(), getOutputCollector() , params.getRuntimeContext());
+    engine.onPipelineStarted(params.getBindingParams(), getOutputCollector() , params.getRuntimeContext());
   }
 
 }

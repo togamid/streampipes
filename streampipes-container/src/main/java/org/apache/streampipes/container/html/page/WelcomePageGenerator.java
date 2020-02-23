@@ -18,7 +18,7 @@
 
 package org.apache.streampipes.container.html.page;
 
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.model.container.PeContainerElementDescription;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +27,7 @@ import java.util.List;
 
 public abstract class WelcomePageGenerator<T> {
 
-  protected List<Description> descriptions;
+  protected List<PeContainerElementDescription> descriptions;
   protected Collection<T> declarers;
   protected String baseUri;
 
@@ -37,9 +37,9 @@ public abstract class WelcomePageGenerator<T> {
     this.descriptions = new ArrayList<>();
   }
 
-  public abstract List<Description> buildUris();
+  public abstract List<PeContainerElementDescription> buildUris();
 
-  public List<Description> getDescriptions() {
+  public List<PeContainerElementDescription> getDescriptions() {
     return descriptions;
   }
 }

@@ -25,7 +25,7 @@ import org.apache.streampipes.connect.adapter.util.TransportFormatGenerator;
 import org.apache.streampipes.connect.container.master.util.AdapterEncryptionService;
 import org.apache.streampipes.container.html.JSONGenerator;
 import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.model.container.PeContainerElementDescription;
 import org.apache.streampipes.model.SpDataSet;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
@@ -110,7 +110,7 @@ public class SourcesManagement {
 //        String host = getConnectHost();
 
         List<AdapterDescription> allAdapters = adapterStorage.getAllAdapters();
-        List<Description> allAdapterDescriptions = new ArrayList<>();
+        List<PeContainerElementDescription> allAdapterDescriptions = new ArrayList<>();
 
         for (AdapterDescription ad : allAdapters) {
             URI uri;
@@ -124,8 +124,8 @@ public class SourcesManagement {
             }
 
 
-            List<Description> streams = new ArrayList<>();
-            Description d = new Description(ad.getName(), "", uri);
+            List<PeContainerElementDescription> streams = new ArrayList<>();
+            PeContainerElementDescription d = new PeContainerElementDescription(ad.getName(), "", uri);
             d.setType("set");
             streams.add(d);
             DataSourceDescriptionHtml dsd = new DataSourceDescriptionHtml("Adapter Stream",

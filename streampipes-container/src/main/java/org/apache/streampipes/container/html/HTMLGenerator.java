@@ -22,16 +22,16 @@ import static org.rendersnake.HtmlAttributesFactory.*;
 
 import org.rendersnake.HtmlCanvas;
 import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.model.container.PeContainerElementDescription;
 
 import java.io.IOException;
 import java.util.List;
 
 public class HTMLGenerator {
 
-  private List<Description> descriptions;
+  private List<PeContainerElementDescription> descriptions;
 
-  public HTMLGenerator(List<Description> descriptions) {
+  public HTMLGenerator(List<PeContainerElementDescription> descriptions) {
     this.descriptions = descriptions;
   }
 
@@ -61,7 +61,7 @@ public class HTMLGenerator {
               "UI to import the elements shown " +
               "here.")._h4();
 
-      for (Description description : descriptions) {
+      for (PeContainerElementDescription description : descriptions) {
 
         html.h3();
         html.write(description.getName());
@@ -70,7 +70,7 @@ public class HTMLGenerator {
         html.h4().write("Description: ").write(description.getDescription())._h4();
         if (description instanceof DataSourceDescriptionHtml) {
           DataSourceDescriptionHtml semanticEventProducerDescription = (DataSourceDescriptionHtml) description;
-          for (Description agentDesc : semanticEventProducerDescription.getStreams()) {
+          for (PeContainerElementDescription agentDesc : semanticEventProducerDescription.getStreams()) {
             html.h5().b().write(agentDesc.getName())._b()._h5();
             html.h5().write(agentDesc.getDescription())._h5();
 

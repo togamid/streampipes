@@ -18,10 +18,12 @@
 
 package org.apache.streampipes.container.html.model;
 
+import org.apache.streampipes.model.container.PeContainerElementDescription;
+
 import java.net.URI;
 
 @Deprecated
-public class AgentDescription extends Description {
+public class AgentDescription extends PeContainerElementDescription {
 
 	public AgentDescription(String name, String description, URI uri)
 	{

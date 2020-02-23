@@ -20,7 +20,7 @@ package org.apache.streampipes.container.html.page;
 
 import org.apache.streampipes.container.declarer.*;
 import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.model.container.PeContainerElementDescription;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
 import org.apache.streampipes.model.graph.DataSinkDescription;
@@ -39,8 +39,8 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
     }
 
     @Override
-    public List<Description> buildUris() {
-        List<Description> descriptions = new ArrayList<>();
+    public List<PeContainerElementDescription> buildUris() {
+        List<PeContainerElementDescription> descriptions = new ArrayList<>();
 
         for (Declarer declarer : declarers) {
             if (declarer instanceof InvocableDeclarer) {
@@ -54,8 +54,8 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         return descriptions;
     }
 
-    private Description getDescription(Declarer declarer) {
-        Description desc = new Description();
+    private PeContainerElementDescription getDescription(Declarer declarer) {
+        PeContainerElementDescription desc = new PeContainerElementDescription();
         // TODO remove after full internationalization support has been implemented
         updateLabel(declarer.declareModel(), desc);
         desc.setType(getType(declarer));
@@ -76,8 +76,8 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         else return "sepa";
     }
 
-    private Description getDescription(SemanticEventProducerDeclarer declarer) {
-        List<Description> streams = new ArrayList<>();
+    private PeContainerElementDescription getDescription(SemanticEventProducerDeclarer declarer) {
+        List<PeContainerElementDescription> streams = new ArrayList<>();
         DataSourceDescriptionHtml desc = new DataSourceDescriptionHtml();
         updateLabel(declarer.declareModel(), desc);
 //        desc.setName(declarer.declareModel().getName());
@@ -85,7 +85,7 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         desc.setUri(URI.create(baseUri + "sep/" + declarer.declareModel().getUri()));
         desc.setType("source");
         for (DataStreamDeclarer streamDeclarer : declarer.getEventStreams()) {
-            Description ad = new Description();
+            PeContainerElementDescription ad = new PeContainerElementDescription();
 //            ad.setDescription(streamDeclarer.declareModel(declarer.declareModel()).getDescription());
 //            ad.setName(streamDeclarer.declareModel(declarer.declareModel()).getName());
             updateLabel(streamDeclarer.declareModel(declarer.declareModel()), ad);
@@ -97,7 +97,7 @@ public class WelcomePageGeneratorImpl extends WelcomePageGenerator<Declarer> {
         return desc;
     }
 
-    private void updateLabel(NamedStreamPipesEntity entity, Description desc) {
+    private void updateLabel(NamedStreamPipesEntity entity, PeContainerElementDescription desc) {
         if (!entity.isIncludesLocales()) {
             desc.setName(entity.getName());
             desc.setDescription(entity.getDescription());

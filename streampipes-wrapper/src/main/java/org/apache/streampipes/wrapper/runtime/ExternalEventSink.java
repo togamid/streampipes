@@ -25,6 +25,6 @@ import org.apache.streampipes.wrapper.params.binding.EventSinkBindingParams;
 public interface ExternalEventSink<B extends EventSinkBindingParams> extends PipelineElement<B,
         DataSinkInvocation> {
 
-  void onInvocation(B parameters, EventSinkRuntimeContext runtimeContext) throws
+  void onPipelineStarted(B parameters, EventSinkRuntimeContext runtimeContext) throws
           SpRuntimeException;
 }

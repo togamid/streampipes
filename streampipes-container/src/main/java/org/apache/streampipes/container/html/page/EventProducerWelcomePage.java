@@ -22,7 +22,7 @@ import org.apache.streampipes.container.declarer.DataStreamDeclarer;
 import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.apache.streampipes.container.html.model.AgentDescription;
 import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.model.container.PeContainerElementDescription;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -37,11 +37,11 @@ public class EventProducerWelcomePage extends WelcomePageGenerator<SemanticEvent
 	}
 	
 	@Override
-	public List<Description> buildUris()
+	public List<PeContainerElementDescription> buildUris()
 	{
 		for(SemanticEventProducerDeclarer declarer : declarers)
 		{
-			List<Description> streams = new ArrayList<>();
+			List<PeContainerElementDescription> streams = new ArrayList<>();
 			DataSourceDescriptionHtml description = new DataSourceDescriptionHtml();
 			description.setName(declarer.declareModel().getName());
 			description.setDescription(declarer.declareModel().getDescription());

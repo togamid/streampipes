@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.container.html.model.AgentDescription;
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.model.container.PeContainerElementDescription;
 
 @Deprecated
 public class EventProcessingAgentWelcomePage extends WelcomePageGenerator<SemanticEventProcessingAgentDeclarer> {
@@ -34,7 +34,7 @@ public class EventProcessingAgentWelcomePage extends WelcomePageGenerator<Semant
 	}
 	
 	@Override
-	public List<Description> buildUris() {
+	public List<PeContainerElementDescription> buildUris() {
 		for(SemanticEventProcessingAgentDeclarer declarer : declarers)
 		{
 			AgentDescription producer = new AgentDescription();

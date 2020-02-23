@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.apache.streampipes.container.declarer.SemanticEventConsumerDeclarer;
 import org.apache.streampipes.container.html.model.AgentDescription;
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.model.container.PeContainerElementDescription;
 
 @Deprecated
 public class EventConsumerWelcomePage extends WelcomePageGenerator<SemanticEventConsumerDeclarer>{
@@ -35,10 +35,10 @@ public class EventConsumerWelcomePage extends WelcomePageGenerator<SemanticEvent
 	}
 	
 	@Override
-	public List<Description> buildUris() {
+	public List<PeContainerElementDescription> buildUris() {
 		for(SemanticEventConsumerDeclarer declarer : declarers)
 		{
-			Description producer = new AgentDescription();
+			PeContainerElementDescription producer = new AgentDescription();
 			producer.setName(declarer.declareModel().getName());
 			producer.setDescription(declarer.declareModel().getDescription());
 			producer.setUri(URI.create(baseUri +declarer.declareModel().getUri().replaceFirst("[a-zA-Z]{4}://[a-zA-Z\\.]+:\\d+/", "")));

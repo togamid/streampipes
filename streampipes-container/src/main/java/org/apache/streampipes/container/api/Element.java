@@ -20,8 +20,6 @@ package org.apache.streampipes.container.api;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import org.eclipse.rdf4j.model.Graph;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.apache.streampipes.commons.Utils;
 import org.apache.streampipes.commons.constants.GlobalStreamPipesConstants;
 import org.apache.streampipes.container.assets.AssetZipGenerator;
@@ -31,8 +29,6 @@ import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.apache.streampipes.container.init.DeclarersSingleton;
 import org.apache.streampipes.container.locales.LabelGenerator;
 import org.apache.streampipes.container.transform.Transformer;
-import org.streampipes.empire.core.empire.SupportsRdfId;
-import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 import org.apache.streampipes.model.SpDataStream;
 import org.apache.streampipes.model.base.ConsumableStreamPipesEntity;
 import org.apache.streampipes.model.base.NamedStreamPipesEntity;
@@ -42,6 +38,10 @@ import org.apache.streampipes.model.graph.DataSourceDescription;
 import org.apache.streampipes.model.grounding.EventGrounding;
 import org.apache.streampipes.model.grounding.TransportFormat;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.eclipse.rdf4j.model.Graph;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.streampipes.empire.core.empire.SupportsRdfId;
+import org.streampipes.empire.core.empire.annotation.InvalidRdfException;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -60,10 +60,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 public abstract class Element<D extends Declarer> {
+
   public Element() {
   }
-
-  protected abstract Map<String, D> getElementDeclarers();
 
   @GET
   @Path("{id}")
@@ -243,4 +242,6 @@ public abstract class Element<D extends Declarer> {
   private String makePath(String elementId, String assetAppendix) {
     return elementId + "/" + assetAppendix;
   }
+
+  protected abstract Map<String, D> getElementDeclarers();
 }

@@ -28,7 +28,7 @@ import org.apache.streampipes.wrapper.routing.SpOutputCollector;
 public interface EventProcessor<B extends EventProcessorBindingParams> extends
         PipelineElement<B, DataProcessorInvocation> {
 
-  void onInvocation(B parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws
+  void onPipelineStarted(B parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) throws
           SpRuntimeException;
 
   void onEvent(Event event, SpOutputCollector collector) throws SpRuntimeException;

@@ -18,15 +18,17 @@
 
 package org.apache.streampipes.container.html.model;
 
+import org.apache.streampipes.model.container.PeContainerElementDescription;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataSourceDescriptionHtml extends Description {
+public class DataSourceDescriptionHtml extends PeContainerElementDescription {
 
-    private List<Description> streams;
+    private List<PeContainerElementDescription> streams;
 
-    public DataSourceDescriptionHtml(String name, String description, URI uri, List<Description> streams) {
+    public DataSourceDescriptionHtml(String name, String description, URI uri, List<PeContainerElementDescription> streams) {
         super(name, description, uri);
         this.streams = streams;
     }
@@ -35,11 +37,11 @@ public class DataSourceDescriptionHtml extends Description {
         streams = new ArrayList<>();
     }
 
-    public List<Description> getStreams() {
+    public List<PeContainerElementDescription> getStreams() {
         return streams;
     }
 
-    public void setStreams(List<Description> streams) {
+    public void setStreams(List<PeContainerElementDescription> streams) {
         this.streams = streams;
     }
 }

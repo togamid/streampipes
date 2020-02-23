@@ -23,7 +23,7 @@ import org.apache.streampipes.container.declarer.DataStreamDeclarer;
 import org.apache.streampipes.container.declarer.SemanticEventProcessingAgentDeclarer;
 import org.apache.streampipes.container.declarer.SemanticEventProducerDeclarer;
 import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.model.container.PeContainerElementDescription;
 import org.apache.streampipes.container.html.page.WelcomePageGenerator;
 import org.apache.streampipes.container.html.page.WelcomePageGeneratorImpl;
 import org.apache.streampipes.model.Response;
@@ -46,7 +46,7 @@ public class WelcomePageGeneratorImplTest {
     @Test
     public void buildUrisWithEmptyListTest() {
         WelcomePageGenerator wpg = new WelcomePageGeneratorImpl("baseUri", new ArrayList<>());
-        List<Description> actual = wpg.buildUris();
+        List<PeContainerElementDescription> actual = wpg.buildUris();
 
         assertEquals(actual.size(), 0);
     }
@@ -54,8 +54,8 @@ public class WelcomePageGeneratorImplTest {
     @Test
     public void buildUrisWithSepaTest() {
         WelcomePageGenerator wpg = new WelcomePageGeneratorImpl("baseUri/", Arrays.asList(getSepaDeclarer()));
-        List<Description> actual = wpg.buildUris();
-        Description expected = new Description("sepaname", "sepadescription", URI.create("baseUri/sepa/sepapathName"));
+        List<PeContainerElementDescription> actual = wpg.buildUris();
+        PeContainerElementDescription expected = new PeContainerElementDescription("sepaname", "sepadescription", URI.create("baseUri/sepa/sepapathName"));
 
         assertEquals(1, actual.size());
         assertEquals(expected, actual.get(0));
@@ -64,11 +64,11 @@ public class WelcomePageGeneratorImplTest {
     @Test
     public void buildUrisWithSepTest() {
         WelcomePageGenerator wpg = new WelcomePageGeneratorImpl("baseUri/", Arrays.asList(getSepdDeclarer()));
-        List<Description> actual = wpg.buildUris();
-        Description expected = new Description("sepname", "sepdescription", URI.create("baseUri/sep/seppathName"));
+        List<PeContainerElementDescription> actual = wpg.buildUris();
+        PeContainerElementDescription expected = new PeContainerElementDescription("sepname", "sepdescription", URI.create("baseUri/sep/seppathName"));
 
         assertEquals(actual.size(), 1);
-        Description desc = actual.get(0);
+        PeContainerElementDescription desc = actual.get(0);
         assertEquals(expected.getName(), desc.getName());
         assertEquals(expected.getDescription(), desc.getDescription());
         assertEquals(expected.getUri(), desc.getUri());
@@ -77,7 +77,7 @@ public class WelcomePageGeneratorImplTest {
 
         DataSourceDescriptionHtml sepDesc = (DataSourceDescriptionHtml) desc;
         assertEquals(1, sepDesc.getStreams().size());
-        Description expectedStream = new Description("streamname", "streamdescription", URI.create("baseUri/stream/streampathName"));
+        PeContainerElementDescription expectedStream = new PeContainerElementDescription("streamname", "streamdescription", URI.create("baseUri/stream/streampathName"));
 
         assertEquals(expectedStream, sepDesc.getStreams().get(0));
     }

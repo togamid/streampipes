@@ -72,7 +72,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   }
 
   @Override
-  public void onInvocation(B parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
+  public void onPipelineStarted(B parameters, SpOutputCollector spOutputCollector, EventProcessorRuntimeContext runtimeContext) {
     if (parameters.getInEventTypes().size() != parameters.getGraph().getInputStreams().size()) {
       throw new IllegalArgumentException("Input parameters do not match!");
     }
@@ -209,7 +209,7 @@ public abstract class SiddhiEventEngine<B extends EventProcessorBindingParams> i
   }
 
   @Override
-  public void onDetach() {
+  public void onPipelineStopped() {
     this.siddhiAppRuntime.shutdown();
   }
 

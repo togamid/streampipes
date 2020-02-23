@@ -18,7 +18,6 @@
 
 package org.apache.streampipes.manager.execution.http;
 
-import org.lightcouch.DocumentConflictException;
 import org.apache.streampipes.manager.execution.status.PipelineStatusManager;
 import org.apache.streampipes.manager.execution.status.SepMonitoringManager;
 import org.apache.streampipes.manager.util.TemporaryGraphStorage;
@@ -34,10 +33,11 @@ import org.apache.streampipes.model.staticproperty.SecretStaticProperty;
 import org.apache.streampipes.storage.api.IPipelineStorage;
 import org.apache.streampipes.storage.management.StorageDispatcher;
 import org.apache.streampipes.user.management.encryption.CredentialsManager;
+import org.lightcouch.DocumentConflictException;
 
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,8 +61,12 @@ public class PipelineExecutor {
 
     List<DataProcessorInvocation> sepas = pipeline.getSepas();
     List<DataSinkInvocation> secs = pipeline.getActions();
-    List<SpDataSet> dataSets = pipeline.getStreams().stream().filter(s -> s instanceof SpDataSet).map(s -> new
-            SpDataSet((SpDataSet) s)).collect(Collectors.toList());
+    List<SpDataSet> dataSets = pipeline
+            .getStreams()
+            .stream()
+            .filter(s -> s instanceof SpDataSet)
+            .map(s -> new SpDataSet((SpDataSet) s))
+            .collect(Collectors.toList());
 
     for (SpDataSet ds : dataSets) {
       ds.setCorrespondingPipeline(pipeline.getPipelineId());
@@ -74,7 +78,7 @@ public class PipelineExecutor {
 
     List<InvocableStreamPipesEntity> decryptedGraphs = decryptSecrets(graphs);
 
-    graphs.forEach(g -> g.setStreamRequirements(Arrays.asList()));
+    graphs.forEach(g -> g.setStreamRequirements(Collections.emptyList()));
 
     PipelineOperationStatus status = new GraphSubmitter(pipeline.getPipelineId(),
             pipeline.getName(), decryptedGraphs, dataSets)

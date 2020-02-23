@@ -25,7 +25,7 @@ import org.apache.streampipes.wrapper.params.binding.EventProcessorBindingParams
 public interface ExternalEventProcessor<B extends EventProcessorBindingParams> extends
         PipelineElement<B, DataProcessorInvocation>  {
 
-  void onInvocation(B parameters, EventProcessorRuntimeContext runtimeContext) throws
+  void onPipelineStarted(B parameters, EventProcessorRuntimeContext runtimeContext) throws
           SpRuntimeException;
 
 }

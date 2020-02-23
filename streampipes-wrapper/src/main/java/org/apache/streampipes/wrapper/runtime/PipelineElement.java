@@ -25,6 +25,12 @@ import org.apache.streampipes.wrapper.params.binding.BindingParams;
 public interface PipelineElement<B extends BindingParams<I>, I extends
         InvocableStreamPipesEntity> {
 
-  void onDetach() throws SpRuntimeException;
+  default void onPipelineCreated(B parameters) { }
+
+  default void onPipelineModified(B parameters) { }
+
+  void onPipelineStopped() throws SpRuntimeException;
+
+  default void onPipelineDeleted() { }
 
 }

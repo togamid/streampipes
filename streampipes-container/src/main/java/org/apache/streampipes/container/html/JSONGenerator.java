@@ -22,15 +22,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import org.apache.streampipes.container.html.model.DataSourceDescriptionHtml;
-import org.apache.streampipes.container.html.model.Description;
+import org.apache.streampipes.model.container.PeContainerElementDescription;
 
 import java.util.List;
 
 public class JSONGenerator {
 
-  private List<Description> description;
+  private List<PeContainerElementDescription> description;
 
-  public JSONGenerator(List<Description> description) {
+  public JSONGenerator(List<PeContainerElementDescription> description) {
     this.description = description;
   }
 
@@ -40,7 +40,7 @@ public class JSONGenerator {
     return jsonArray.toString();
   }
 
-  private JsonObject getJsonElement(Description d) {
+  private JsonObject getJsonElement(PeContainerElementDescription d) {
     JsonObject obj = makeDescription(d);
     if (d instanceof DataSourceDescriptionHtml) {
       DataSourceDescriptionHtml producerDesc = (DataSourceDescriptionHtml) d;
@@ -53,7 +53,7 @@ public class JSONGenerator {
     return obj;
   }
 
-  private JsonObject makeDescription(Description d) {
+  private JsonObject makeDescription(PeContainerElementDescription d) {
     JsonObject obj = new JsonObject();
     obj.add("uri", new JsonPrimitive(d.getUri().toString()));
     obj.add("name", new JsonPrimitive(d.getName()));

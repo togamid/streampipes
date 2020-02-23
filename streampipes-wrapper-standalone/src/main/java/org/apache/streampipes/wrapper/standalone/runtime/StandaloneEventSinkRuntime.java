@@ -74,7 +74,7 @@ public class StandaloneEventSinkRuntime<B extends EventSinkBindingParams> extend
 
   @Override
   public void bindEngine() throws SpRuntimeException {
-    engine.onInvocation(params.getBindingParams(), params.getRuntimeContext());
+    engine.onPipelineStarted(params.getBindingParams(), params.getRuntimeContext());
   }
 
 }

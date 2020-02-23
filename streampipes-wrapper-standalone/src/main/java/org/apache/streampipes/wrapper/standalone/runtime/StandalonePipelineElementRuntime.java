@@ -54,7 +54,7 @@ public abstract class StandalonePipelineElementRuntime<B extends BindingParams<I
   }
 
   public void discardEngine() throws SpRuntimeException {
-    engine.onDetach();
+    engine.onPipelineStopped();
   }
 
   public List<SpInputCollector> getInputCollectors() throws SpRuntimeException {
