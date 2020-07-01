@@ -19,8 +19,12 @@
 package org.apache.streampipes.rest.impl.datalake;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.squareup.moshi.Json;
 import okhttp3.OkHttpClient;
 import org.apache.commons.io.FileUtils;
+import org.apache.streampipes.rest.impl.Couchdb;
+import org.apache.streampipes.storage.couchdb.utils.Utils;
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
 import org.influxdb.dto.Point;
@@ -32,6 +36,7 @@ import org.apache.streampipes.rest.impl.datalake.model.DataResult;
 import org.apache.streampipes.rest.impl.datalake.model.GroupedDataResult;
 import org.apache.streampipes.rest.impl.datalake.model.PageResult;
 import org.apache.streampipes.storage.management.StorageDispatcher;
+import org.lightcouch.CouchDbClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
 public class DataLakeManagementV3 {
@@ -184,7 +190,6 @@ public class DataLakeManagementV3 {
     influxDB.close();
 
     return dataResult;
-
   }
 
   public DataResult getEventsFromNowAutoAggregation(String index, String timeunit, int value)
@@ -222,6 +227,37 @@ public class DataLakeManagementV3 {
     int pageSum = getMaxPage(index, itemsPerPage);
 
     return new PageResult(dataResult.getTotal(), dataResult.getHeaders(), dataResult.getRows(), page, pageSum);
+  }
+
+  public void deleteMeasurement(String index) {
+
+    InfluxDB influxDB = getInfluxDBClient();
+    Query query = new Query("DROP MEASUREMENT " + index);
+    QueryResult influx_result = influxDB.query(query);
+
+    if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
+      System.out.println("Error!");
+      // TODO: Raise error exception
+    }
+    influxDB.close();
+
+    CouchDbClient couchDbClient = Utils.getCoucbDbClient("data-lake");
+    List<JsonObject> couch_result = couchDbClient.view("_all_docs").includeDocs(true).query(JsonObject.class);
+
+    for (JsonObject result : couch_result) {
+      if (result.has("measureName")) {
+        if (result.get("measureName").toString().equals(index)) {
+            String id = result.get("_id").toString();
+            String rev = result.get("_rev").toString();
+            couchDbClient.remove(result.get("_id").toString(), result.get("_rev").toString());
+            break;
+        }
+      }
+    }
+
+    couchDbClient.shutdown();
+
+    // TODO: Raise exception if both not successful
   }
 
   public PageResult getEvents(String index, int itemsPerPage) throws IOException {
@@ -517,7 +553,6 @@ public class DataLakeManagementV3 {
             .readTimeout(120, TimeUnit.SECONDS)
             .writeTimeout(120, TimeUnit.SECONDS);
 
-    
     return InfluxDBFactory.connect(BackendConfig.INSTANCE.getInfluxUrl(), okHttpClientBuilder);
   }
 
