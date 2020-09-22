@@ -107,6 +107,14 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   }
 
   @GET
+  @Path("/data/{index}/delete")
+  // @Produces(MediaType.APPLICATION_JSON)
+  public void deleteMeasurement(@PathParam("index") String index) {
+    dataLakeManagement.deleteMeasurement(index);
+    // return ok("John");
+  }
+
+  @GET
   @Produces(MediaType.APPLICATION_JSON)
   @Path("/data/{index}/last/{value}/{unit}")
   public Response getAllData(@PathParam("index") String index,
@@ -244,6 +252,4 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
 
         return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
   }
-
-
 }
