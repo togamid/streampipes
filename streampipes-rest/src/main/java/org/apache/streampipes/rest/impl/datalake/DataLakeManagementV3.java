@@ -229,6 +229,7 @@ public class DataLakeManagementV3 {
     return new PageResult(dataResult.getTotal(), dataResult.getHeaders(), dataResult.getRows(), page, pageSum);
   }
 
+
   public DataResult getRetentionPoliciesOfDatabase() {
     InfluxDB influxDB = getInfluxDBClient();
     Query query = new Query("SHOW RETENTION POLICIES ON sp");
@@ -239,21 +240,24 @@ public class DataLakeManagementV3 {
   }
 
 
-  public void alterRetentionPolicy(String policyName, String duration, String shardDuration, int replication, boolean defaultPolicy) {
+  public void createRetentionPolicy(String policyName, String duration, String shardDuration, int replication, boolean defaultPolicy) {
     InfluxDB influxDB = getInfluxDBClient();
 
     String defaultPolicyString = "";
-    if (defaultPolicy)
-      defaultPolicyString = " DEFAULT";
+    if (defaultPolicy) { defaultPolicyString = " DEFAULT"; }
+    String durationString = "";
+    if (duration != "")  {  durationString = " DURATION " + duration; }
+    String replicationString = "";
+    if (replication != 0) { replicationString = " REPLICATION " + replication; }
+    String shardDurationString = "";
+    if (shardDuration != "")  { shardDuration = " SHARD DURATION " + shardDuration; }
 
-    Query query = new Query("ALTER RETENTION POLICY "
+    Query query = new Query("CREATE RETENTION POLICY "
             + policyName
-            + " ON sp DURATION "
-            + duration
-            + " REPLICATION "
-            + replication
-            + " SHARD DURATION "
-            + shardDuration
+            + " ON sp "
+            + durationString
+            + replicationString
+            + shardDurationString
             + defaultPolicyString,
             BackendConfig.INSTANCE.getInfluxDatabaseName());
 
@@ -262,11 +266,53 @@ public class DataLakeManagementV3 {
       System.out.println("Error!");
     }
   }
-  
+
+
+  public void alterRetentionPolicy(String policyName, String duration, String shardDuration, int replication, boolean defaultPolicy) {
+    InfluxDB influxDB = getInfluxDBClient();
+
+    String defaultPolicyString = "";
+    if (defaultPolicy) { defaultPolicyString = " DEFAULT"; }
+    String durationString = "";
+    if (duration != "")  {  durationString = " DURATION " + duration; }
+    String replicationString = "";
+    if (replication != 0) { replicationString = " REPLICATION " + replication; }
+    String shardDurationString = "";
+    if (shardDuration != "")  { shardDuration = " SHARD DURATION " + shardDuration; }
+
+    Query query = new Query("ALTER RETENTION POLICY "
+            + policyName
+            + " ON sp "
+            + durationString
+            + replicationString
+            + shardDurationString
+            + defaultPolicyString,
+            BackendConfig.INSTANCE.getInfluxDatabaseName());
+
+    QueryResult influx_result = influxDB.query(query);
+    if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
+      System.out.println("Error!");
+    }
+  }
+
+  public void deleteRetentionPolicy(String policyName) {
+    InfluxDB influxDB = getInfluxDBClient();
+    Query query = new Query("DROP RETENTION POLICY "
+            + policyName
+            + " ON sp ",
+            BackendConfig.INSTANCE.getInfluxDatabaseName());
+
+    QueryResult influx_result = influxDB.query(query);
+    if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
+      System.out.println("Error!");
+    }
+  }
+
   public static void main(String [] args) {
     DataLakeManagementV3 dlmv3 = new DataLakeManagementV3();
     DataResult result = dlmv3.getRetentionPoliciesOfDatabase();
-    dlmv3.alterRetentionPolicy("rp2", "1h", "1h", 3, Boolean.FALSE);
+    dlmv3.createRetentionPolicy("rp6", "1h", "", 5, Boolean.FALSE);
+    // dlmv3.deleteRetentionPolicy("rp5");
   }
 
   public void deleteMeasurement(String index) {
