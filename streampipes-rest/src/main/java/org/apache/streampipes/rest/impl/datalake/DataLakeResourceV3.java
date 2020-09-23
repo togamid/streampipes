@@ -30,6 +30,7 @@ import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
+import java.rmi.server.ExportException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -252,4 +253,66 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
 
         return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
   }
+
+  @GET
+  @Path("/policy/info")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response getRetentionPolicies() {
+    DataResult result = dataLakeManagement.getRetentionPoliciesOfDatabase();
+    return Response.ok(result).build();
+  }
+
+  @GET
+  @Path("/policy/{name}/delete")
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response deleteRetentionPolicy(@PathParam("name") String policyName) {
+    dataLakeManagement.deleteRetentionPolicy(policyName);
+    return Response.ok("Successfully deleted the retention policy.", MediaType.TEXT_PLAIN).build();
+  }
+
+  @GET
+  @Path("/policy/{name}/create")
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response createRetentionPolicy(@PathParam("name") String policyName,
+                                        @Context UriInfo info) {
+
+    String duration = info.getQueryParameters().getFirst("duration");
+    String replicationString  = info.getQueryParameters().getFirst("replication");
+    String shardDuration = info.getQueryParameters().getFirst("shardDuration");
+    String defaultPolicyString = info.getQueryParameters().getFirst("defaultPolicy");
+
+    Integer replication = 0;
+    Boolean defaultPolicy = Boolean.FALSE;
+
+    if (replicationString != null) { replication = Integer.parseInt(replicationString); }
+    if (defaultPolicyString != null) { defaultPolicy = Boolean.TRUE; }
+
+    dataLakeManagement.createRetentionPolicy(policyName, duration, shardDuration, replication, defaultPolicy);
+    return Response.ok("Successfully created retention policy.", MediaType.TEXT_PLAIN).build();
+  }
+
+
+  @GET
+  @Path("/policy/{name}/alter")
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response alterRetentionPolicy(@PathParam("name") String policyName,
+                                        @Context UriInfo info) {
+
+    String duration = info.getQueryParameters().getFirst("duration");
+    String replicationString  = info.getQueryParameters().getFirst("replication");
+    String shardDuration = info.getQueryParameters().getFirst("shardDuration");
+    String defaultPolicyString = info.getQueryParameters().getFirst("defaultPolicy");
+
+    Integer replication = 0;
+    Boolean defaultPolicy = Boolean.FALSE;
+
+    if (replicationString != null) { replication = Integer.parseInt(replicationString); }
+    if (defaultPolicyString != null) { defaultPolicy = Boolean.TRUE; }
+
+    dataLakeManagement.alterRetentionPolicy(policyName, duration, shardDuration, replication, defaultPolicy);
+    return Response.ok("Successfully altered retention policy.", MediaType.TEXT_PLAIN).build();
+  }
+
+
+
 }

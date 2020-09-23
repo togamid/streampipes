@@ -246,11 +246,11 @@ public class DataLakeManagementV3 {
     String defaultPolicyString = "";
     if (defaultPolicy) { defaultPolicyString = " DEFAULT"; }
     String durationString = "";
-    if (duration != "")  {  durationString = " DURATION " + duration; }
+    if (duration != null)  {  durationString = " DURATION " + duration; }
     String replicationString = "";
     if (replication != 0) { replicationString = " REPLICATION " + replication; }
     String shardDurationString = "";
-    if (shardDuration != "")  { shardDuration = " SHARD DURATION " + shardDuration; }
+    if (shardDuration != null)  { shardDuration = " SHARD DURATION " + shardDuration; }
 
     Query query = new Query("CREATE RETENTION POLICY "
             + policyName
@@ -274,11 +274,11 @@ public class DataLakeManagementV3 {
     String defaultPolicyString = "";
     if (defaultPolicy) { defaultPolicyString = " DEFAULT"; }
     String durationString = "";
-    if (duration != "")  {  durationString = " DURATION " + duration; }
+    if (duration != null)  {  durationString = " DURATION " + duration; }
     String replicationString = "";
     if (replication != 0) { replicationString = " REPLICATION " + replication; }
     String shardDurationString = "";
-    if (shardDuration != "")  { shardDuration = " SHARD DURATION " + shardDuration; }
+    if (shardDuration != null)  { shardDuration = " SHARD DURATION " + shardDuration; }
 
     Query query = new Query("ALTER RETENTION POLICY "
             + policyName
@@ -288,7 +288,7 @@ public class DataLakeManagementV3 {
             + shardDurationString
             + defaultPolicyString,
             BackendConfig.INSTANCE.getInfluxDatabaseName());
-
+    
     QueryResult influx_result = influxDB.query(query);
     if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
       System.out.println("Error!");
@@ -311,7 +311,7 @@ public class DataLakeManagementV3 {
   public static void main(String [] args) {
     DataLakeManagementV3 dlmv3 = new DataLakeManagementV3();
     DataResult result = dlmv3.getRetentionPoliciesOfDatabase();
-    dlmv3.createRetentionPolicy("rp6", "1h", "", 5, Boolean.FALSE);
+    dlmv3.createRetentionPolicy("rp8", "1h", null, 5, Boolean.FALSE);
     // dlmv3.deleteRetentionPolicy("rp5");
   }
 
