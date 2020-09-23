@@ -288,7 +288,7 @@ public class DataLakeManagementV3 {
             + shardDurationString
             + defaultPolicyString,
             BackendConfig.INSTANCE.getInfluxDatabaseName());
-    
+
     QueryResult influx_result = influxDB.query(query);
     if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
       System.out.println("Error!");
@@ -308,11 +308,31 @@ public class DataLakeManagementV3 {
     }
   }
 
+  public double getNumOfRecordsOfTable(String index) {
+    InfluxDB influxDB = getInfluxDBClient();
+    double numOfRecords = 0;
+
+    QueryResult.Result result = influxDB.query(new Query("SELECT count(*) FROM " + index,
+            BackendConfig.INSTANCE.getInfluxDatabaseName())).getResults().get(0);
+    if (result.getSeries() == null) {
+      return numOfRecords;
+    }
+
+    for (Object item : result.getSeries().get(0).getValues().get(0)) {
+      if (item instanceof Double && numOfRecords < Double.parseDouble(item.toString())) {
+        numOfRecords = Double.parseDouble(item.toString());
+      }
+    }
+
+    return numOfRecords;
+  }
+
   public static void main(String [] args) {
     DataLakeManagementV3 dlmv3 = new DataLakeManagementV3();
-    DataResult result = dlmv3.getRetentionPoliciesOfDatabase();
-    dlmv3.createRetentionPolicy("rp8", "1h", null, 5, Boolean.FALSE);
-    // dlmv3.deleteRetentionPolicy("rp5");
+    InfluxDB influxDB = dlmv3.getInfluxDBClient();
+    // DataResult result = dlmv3.getRetentionPoliciesOfDatabase();
+    // dlmv3.createRetentionPolicy("rp8", "1h", null, 5, Boolean.FALSE);
+    // dlmv3.getNumOfRecordsOfTable("john3800");
   }
 
   public void deleteMeasurement(String index) {
@@ -601,24 +621,6 @@ public class DataLakeManagementV3 {
     String stringDate = result.getResults().get(0).getSeries().get(0).getValues().get(0).get(timestampIndex).toString();
     Date date = tryParseDate(stringDate);
     return date.getTime();
-  }
-
-  private double getNumOfRecordsOfTable(String index, InfluxDB influxDB) {
-    double numOfRecords = 0;
-
-    QueryResult.Result result = influxDB.query(new Query("SELECT count(*) FROM " + index,
-            BackendConfig.INSTANCE.getInfluxDatabaseName())).getResults().get(0);
-    if (result.getSeries() == null) {
-      return numOfRecords;
-    }
-
-    for (Object item : result.getSeries().get(0).getValues().get(0)) {
-      if (item instanceof Double && numOfRecords < Double.parseDouble(item.toString())) {
-        numOfRecords = Double.parseDouble(item.toString());
-      }
-    }
-
-    return numOfRecords;
   }
 
   private double getNumOfRecordsOfTable(String index, InfluxDB influxDB, long startDate, long endDate) {

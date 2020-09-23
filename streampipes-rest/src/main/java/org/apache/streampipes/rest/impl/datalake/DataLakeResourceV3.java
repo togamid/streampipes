@@ -220,6 +220,14 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   }
 
   @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  @Path("/data/{index}/count")
+  public Response getNumOfRecordsOfTable(@PathParam("index") String index) {
+      Double numOfRecords = dataLakeManagement.getNumOfRecordsOfTable(index);
+      return Response.ok(numOfRecords, MediaType.TEXT_PLAIN).build();
+  }
+
+  @GET
   @Path("/data/image/{route}/file")
   @Produces("image/png")
   public Response getImage(@PathParam("route") String fileRoute) throws IOException {
@@ -312,7 +320,4 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     dataLakeManagement.alterRetentionPolicy(policyName, duration, shardDuration, replication, defaultPolicy);
     return Response.ok("Successfully altered retention policy.", MediaType.TEXT_PLAIN).build();
   }
-
-
-
 }
