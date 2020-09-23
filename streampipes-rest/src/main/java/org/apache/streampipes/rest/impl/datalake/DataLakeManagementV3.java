@@ -265,6 +265,7 @@ public class DataLakeManagementV3 {
     if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
       System.out.println("Error!");
     }
+    influxDB.close();
   }
 
 
@@ -293,6 +294,7 @@ public class DataLakeManagementV3 {
     if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
       System.out.println("Error!");
     }
+    influxDB.close();
   }
 
   public void deleteRetentionPolicy(String policyName) {
@@ -306,6 +308,7 @@ public class DataLakeManagementV3 {
     if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
       System.out.println("Error!");
     }
+    influxDB.close();
   }
 
   public double getNumOfRecordsOfTable(String index) {
@@ -323,13 +326,27 @@ public class DataLakeManagementV3 {
         numOfRecords = Double.parseDouble(item.toString());
       }
     }
-
+    influxDB.close();
     return numOfRecords;
+  }
+
+  public long getStorageSizeOfDatabase() {
+    InfluxDB influxDB = getInfluxDBClient();
+    Query query = new Query("SHOW STATS for 'shard'");
+    QueryResult influx_result = influxDB.query(query);
+
+    long storageSize = 0;
+    for (QueryResult.Series series : influx_result.getResults().get(0).getSeries()) {
+      storageSize = storageSize + (long) Double.parseDouble(series.getValues().get(0).get(0).toString());
+    }
+    influxDB.close();
+    return storageSize;
   }
 
   public static void main(String [] args) {
     DataLakeManagementV3 dlmv3 = new DataLakeManagementV3();
     InfluxDB influxDB = dlmv3.getInfluxDBClient();
+    long size = dlmv3.getStorageSizeOfDatabase();
     // DataResult result = dlmv3.getRetentionPoliciesOfDatabase();
     // dlmv3.createRetentionPolicy("rp8", "1h", null, 5, Boolean.FALSE);
     // dlmv3.getNumOfRecordsOfTable("john3800");

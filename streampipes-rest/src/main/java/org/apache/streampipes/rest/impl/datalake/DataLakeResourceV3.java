@@ -30,7 +30,6 @@ import org.apache.streampipes.rest.shared.annotation.JacksonSerialized;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.io.IOException;
-import java.rmi.server.ExportException;
 import java.text.ParseException;
 import java.util.List;
 
@@ -250,16 +249,24 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @POST
   @Produces(MediaType.TEXT_PLAIN)
   @Path("/data/{index}/{startdate}/{enddate}/labeling/{column}")
-    public Response labelData(@Context UriInfo info,
-                              @PathParam("index") String index,
-                              @PathParam("startdate") long startdate,
-                              @PathParam("enddate") long enddate,
-                              @PathParam("column") String column) {
+  public Response labelData(@Context UriInfo info,
+                            @PathParam("index") String index,
+                            @PathParam("startdate") long startdate,
+                            @PathParam("enddate") long enddate,
+                            @PathParam("column") String column) {
 
-        String label = info.getQueryParameters().getFirst("label");
-        this.dataLakeManagement.updateLabels(index, column, startdate, enddate, label);
+      String label = info.getQueryParameters().getFirst("label");
+      this.dataLakeManagement.updateLabels(index, column, startdate, enddate, label);
 
-        return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
+      return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
+  }
+
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  @Path("/database/size")
+  public Response getStorageSizeOfDatabase() {
+    Long storageSize = dataLakeManagement.getStorageSizeOfDatabase();
+    return Response.ok(storageSize.toString(), MediaType.TEXT_PLAIN).build();
   }
 
   @GET
