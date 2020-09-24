@@ -282,7 +282,11 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @Produces(MediaType.TEXT_PLAIN)
   public Response deleteRetentionPolicy(@PathParam("name") String policyName) {
     dataLakeManagement.deleteRetentionPolicy(policyName);
-    return Response.ok("Successfully deleted the retention policy.", MediaType.TEXT_PLAIN).build();
+    if (dataLakeManagement.deleteRetentionPolicy(policyName)) {
+      return Response.ok("Successfully deleted the retention policy.", MediaType.TEXT_PLAIN).build();
+    } else {
+      return Response.serverError().build();
+    }
   }
 
   @GET
@@ -298,9 +302,11 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     Integer replication = 0;
 
     if (replicationString != null) { replication = Integer.parseInt(replicationString); }
-    dataLakeManagement.createRetentionPolicy(policyName, duration, shardDuration, replication);
-
-    return Response.ok("Successfully created retention policy.", MediaType.TEXT_PLAIN).build();
+    if (dataLakeManagement.createRetentionPolicy(policyName, duration, shardDuration, replication)) {
+      return Response.ok("Successfully created retention policy.", MediaType.TEXT_PLAIN).build();
+    } else {
+      return Response.serverError().build();
+    }
   }
 
 
@@ -318,7 +324,10 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
 
     if (replicationString != null) { replication = Integer.parseInt(replicationString); }
 
-    dataLakeManagement.alterRetentionPolicy(policyName, duration, shardDuration, replication);
-    return Response.ok("Successfully altered retention policy.", MediaType.TEXT_PLAIN).build();
+    if (dataLakeManagement.alterRetentionPolicy(policyName, duration, shardDuration, replication)) {
+      return Response.ok("Successfully altered retention policy.", MediaType.TEXT_PLAIN).build();
+    } else {
+      return Response.serverError().build();
+    }
   }
 }

@@ -240,7 +240,7 @@ public class DataLakeManagementV3 {
   }
 
 
-  public void createRetentionPolicy(String policyName, String duration, String shardDuration, int replication) {
+  public boolean createRetentionPolicy(String rp, String duration, String shardDuration, int replication) {
     InfluxDB influxDB = getInfluxDBClient();
 
     String durationString = "";
@@ -251,7 +251,7 @@ public class DataLakeManagementV3 {
     if (shardDuration != null)  { shardDurationString = " SHARD DURATION " + shardDuration; }
 
     Query query = new Query("CREATE RETENTION POLICY "
-            + policyName
+            + rp
             + " ON "
             + BackendConfig.INSTANCE.getInfluxDatabaseName()
             + durationString
@@ -261,13 +261,15 @@ public class DataLakeManagementV3 {
 
     QueryResult influx_result = influxDB.query(query);
     if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
-      System.out.println("Error!");
+      influxDB.close();
+      return false;
     }
     influxDB.close();
+    return true;
   }
 
 
-  public void alterRetentionPolicy(String policyName, String duration, String shardDuration, int replication) {
+  public boolean alterRetentionPolicy(String rp, String duration, String shardDuration, int replication) {
     InfluxDB influxDB = getInfluxDBClient();
 
     String durationString = "";
@@ -278,7 +280,7 @@ public class DataLakeManagementV3 {
     if (shardDuration != null)  { shardDurationString = " SHARD DURATION " + shardDuration; }
 
     Query query = new Query("ALTER RETENTION POLICY "
-            + policyName
+            + rp
             + " ON "
             + BackendConfig.INSTANCE.getInfluxDatabaseName()
             + durationString
@@ -288,24 +290,29 @@ public class DataLakeManagementV3 {
 
     QueryResult influx_result = influxDB.query(query);
     if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
-      System.out.println("Error!");
+        influxDB.close();
+        return false;
+
     }
     influxDB.close();
+    return true;
   }
 
-  public void deleteRetentionPolicy(String policyName) {
+  public boolean deleteRetentionPolicy(String rp) {
     InfluxDB influxDB = getInfluxDBClient();
     Query query = new Query("DROP RETENTION POLICY "
-            + policyName
+            + rp
             + " ON "
             + BackendConfig.INSTANCE.getInfluxDatabaseName(),
             BackendConfig.INSTANCE.getInfluxDatabaseName());
 
     QueryResult influx_result = influxDB.query(query);
     if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
-      System.out.println("Error!");
+        influxDB.close();
+        return false;
     }
     influxDB.close();
+    return true;
   }
 
   public double getNumOfRecordsOfTable(String index) {
@@ -344,10 +351,11 @@ public class DataLakeManagementV3 {
     DataLakeManagementV3 dlmv3 = new DataLakeManagementV3();
     InfluxDB influxDB = dlmv3.getInfluxDBClient();
     long size = dlmv3.getStorageSizeOfDatabase();
-    dlmv3.deleteRetentionPolicy("rp10");
+    System.out.println(size);
+    // dlmv3.deleteRetentionPolicy("rp10");
     // DataResult result = dlmv3.getRetentionPoliciesOfDatabase();
     // dlmv3.createRetentionPolicy("rp8", "1h", null, 5, Boolean.FALSE);
-    // dlmv3.getNumOfRecordsOfTable("john3800");
+    System.out.println(dlmv3.getNumOfRecordsOfTable("felix4", null));
   }
 
   public void deleteMeasurement(String index) {
