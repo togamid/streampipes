@@ -240,17 +240,15 @@ public class DataLakeManagementV3 {
   }
 
 
-  public void createRetentionPolicy(String policyName, String duration, String shardDuration, int replication, boolean defaultPolicy) {
+  public void createRetentionPolicy(String policyName, String duration, String shardDuration, int replication) {
     InfluxDB influxDB = getInfluxDBClient();
 
-    String defaultPolicyString = "";
-    if (defaultPolicy) { defaultPolicyString = " DEFAULT"; }
     String durationString = "";
     if (duration != null)  {  durationString = " DURATION " + duration; }
     String replicationString = "";
     if (replication != 0) { replicationString = " REPLICATION " + replication; }
     String shardDurationString = "";
-    if (shardDuration != null)  { shardDuration = " SHARD DURATION " + shardDuration; }
+    if (shardDuration != null)  { shardDurationString = " SHARD DURATION " + shardDuration; }
 
     Query query = new Query("CREATE RETENTION POLICY "
             + policyName
@@ -258,8 +256,7 @@ public class DataLakeManagementV3 {
             + BackendConfig.INSTANCE.getInfluxDatabaseName()
             + durationString
             + replicationString
-            + shardDurationString
-            + defaultPolicyString,
+            + shardDurationString,
             BackendConfig.INSTANCE.getInfluxDatabaseName());
 
     QueryResult influx_result = influxDB.query(query);
@@ -270,17 +267,15 @@ public class DataLakeManagementV3 {
   }
 
 
-  public void alterRetentionPolicy(String policyName, String duration, String shardDuration, int replication, boolean defaultPolicy) {
+  public void alterRetentionPolicy(String policyName, String duration, String shardDuration, int replication) {
     InfluxDB influxDB = getInfluxDBClient();
 
-    String defaultPolicyString = "";
-    if (defaultPolicy) { defaultPolicyString = " DEFAULT"; }
     String durationString = "";
     if (duration != null)  {  durationString = " DURATION " + duration; }
     String replicationString = "";
     if (replication != 0) { replicationString = " REPLICATION " + replication; }
     String shardDurationString = "";
-    if (shardDuration != null)  { shardDuration = " SHARD DURATION " + shardDuration; }
+    if (shardDuration != null)  { shardDurationString = " SHARD DURATION " + shardDuration; }
 
     Query query = new Query("ALTER RETENTION POLICY "
             + policyName
@@ -288,8 +283,7 @@ public class DataLakeManagementV3 {
             + BackendConfig.INSTANCE.getInfluxDatabaseName()
             + durationString
             + replicationString
-            + shardDurationString
-            + defaultPolicyString,
+            + shardDurationString,
             BackendConfig.INSTANCE.getInfluxDatabaseName());
 
     QueryResult influx_result = influxDB.query(query);

@@ -294,15 +294,12 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     String duration = info.getQueryParameters().getFirst("duration");
     String replicationString  = info.getQueryParameters().getFirst("replication");
     String shardDuration = info.getQueryParameters().getFirst("shardDuration");
-    String defaultPolicyString = info.getQueryParameters().getFirst("defaultPolicy");
 
     Integer replication = 0;
-    Boolean defaultPolicy = Boolean.FALSE;
 
     if (replicationString != null) { replication = Integer.parseInt(replicationString); }
-    if (defaultPolicyString != null) { defaultPolicy = Boolean.TRUE; }
+    dataLakeManagement.createRetentionPolicy(policyName, duration, shardDuration, replication);
 
-    dataLakeManagement.createRetentionPolicy(policyName, duration, shardDuration, replication, defaultPolicy);
     return Response.ok("Successfully created retention policy.", MediaType.TEXT_PLAIN).build();
   }
 
@@ -316,15 +313,12 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
     String duration = info.getQueryParameters().getFirst("duration");
     String replicationString  = info.getQueryParameters().getFirst("replication");
     String shardDuration = info.getQueryParameters().getFirst("shardDuration");
-    String defaultPolicyString = info.getQueryParameters().getFirst("defaultPolicy");
 
     Integer replication = 0;
-    Boolean defaultPolicy = Boolean.FALSE;
 
     if (replicationString != null) { replication = Integer.parseInt(replicationString); }
-    if (defaultPolicyString != null) { defaultPolicy = Boolean.TRUE; }
 
-    dataLakeManagement.alterRetentionPolicy(policyName, duration, shardDuration, replication, defaultPolicy);
+    dataLakeManagement.alterRetentionPolicy(policyName, duration, shardDuration, replication);
     return Response.ok("Successfully altered retention policy.", MediaType.TEXT_PLAIN).build();
   }
 }
