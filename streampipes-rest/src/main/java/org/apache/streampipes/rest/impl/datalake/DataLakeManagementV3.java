@@ -232,7 +232,7 @@ public class DataLakeManagementV3 {
 
   public DataResult getRetentionPoliciesOfDatabase() {
     InfluxDB influxDB = getInfluxDBClient();
-    Query query = new Query("SHOW RETENTION POLICIES ON sp");
+    Query query = new Query("SHOW RETENTION POLICIES ON " + BackendConfig.INSTANCE.getInfluxDatabaseName());
     QueryResult influx_result = influxDB.query(query);
     DataResult dataResult = convertResult(influx_result);
     influxDB.close();
@@ -254,7 +254,8 @@ public class DataLakeManagementV3 {
 
     Query query = new Query("CREATE RETENTION POLICY "
             + policyName
-            + " ON sp "
+            + " ON "
+            + BackendConfig.INSTANCE.getInfluxDatabaseName()
             + durationString
             + replicationString
             + shardDurationString
@@ -283,7 +284,8 @@ public class DataLakeManagementV3 {
 
     Query query = new Query("ALTER RETENTION POLICY "
             + policyName
-            + " ON sp "
+            + " ON "
+            + BackendConfig.INSTANCE.getInfluxDatabaseName()
             + durationString
             + replicationString
             + shardDurationString
@@ -301,7 +303,8 @@ public class DataLakeManagementV3 {
     InfluxDB influxDB = getInfluxDBClient();
     Query query = new Query("DROP RETENTION POLICY "
             + policyName
-            + " ON sp ",
+            + " ON "
+            + BackendConfig.INSTANCE.getInfluxDatabaseName(),
             BackendConfig.INSTANCE.getInfluxDatabaseName());
 
     QueryResult influx_result = influxDB.query(query);
@@ -347,6 +350,7 @@ public class DataLakeManagementV3 {
     DataLakeManagementV3 dlmv3 = new DataLakeManagementV3();
     InfluxDB influxDB = dlmv3.getInfluxDBClient();
     long size = dlmv3.getStorageSizeOfDatabase();
+    dlmv3.deleteRetentionPolicy("rp10");
     // DataResult result = dlmv3.getRetentionPoliciesOfDatabase();
     // dlmv3.createRetentionPolicy("rp8", "1h", null, 5, Boolean.FALSE);
     // dlmv3.getNumOfRecordsOfTable("john3800");
