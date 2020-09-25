@@ -141,6 +141,7 @@ public class DataLakeManagementV3 {
 
   public DataResult getEventsAutoAggregation(String index, long startDate, long endDate, @Nullable String rp)
           throws ParseException {
+
     InfluxDB influxDB = getInfluxDBClient();
     double numberOfRecords = getNumOfRecordsOfTable(index, influxDB, startDate, endDate, rp);
     influxDB.close();
@@ -253,16 +254,16 @@ public class DataLakeManagementV3 {
     return new PageResult(dataResult.getTotal(), dataResult.getHeaders(), dataResult.getRows(), page, pageSum);
   }
 
-  public void writeMeasurementFromDefaulToCustomRententionPolicy(String index, String rp) {
+  public void assignMeasurementFromDefaulToCustomRententionPolicy(String index, String rp) {
     InfluxDB influxDB = getInfluxDBClient();
     String rp_default = BackendConfig.INSTANCE.getDefaultRetentionPolicyName();
 
-    QueryResult result = influxDB.query(new Query("SELECT * INTO " +
+    influxDB.query(new Query("SELECT * INTO " +
             BackendConfig.INSTANCE.getInfluxDatabaseName() + "." + rp + "." + index + "_temp"
             + " FROM " + BackendConfig.INSTANCE.getInfluxDatabaseName() + "." + rp_default + "." + index));
     deleteMeasurement(index);
 
-    QueryResult result_2 = influxDB.query(new Query("SELECT * INTO " +
+    influxDB.query(new Query("SELECT * INTO " +
             BackendConfig.INSTANCE.getInfluxDatabaseName() + "." + rp + "." + index
             + " FROM " + BackendConfig.INSTANCE.getInfluxDatabaseName() + "." + rp + "." + index + "_temp"));
     deleteMeasurement(index + "_temp");
@@ -689,7 +690,6 @@ public class DataLakeManagementV3 {
     double numOfRecords = 0;
 
     if (rp == null) rp = BackendConfig.INSTANCE.getDefaultRetentionPolicyName();
-
     QueryResult.Result result = influxDB.query(new Query("SELECT count(*) FROM "
             + BackendConfig.INSTANCE.getInfluxDatabaseName() + "." + rp + "." + index +
             " WHERE time > " + startDate * 1000000 + " AND time < " + endDate * 1000000,
@@ -712,7 +712,6 @@ public class DataLakeManagementV3 {
     double numOfRecords = 0;
 
     if (rp == null) rp = BackendConfig.INSTANCE.getDefaultRetentionPolicyName();
-
     QueryResult.Result result = influxDB.query(new Query("SELECT count(*) FROM "
             + BackendConfig.INSTANCE.getInfluxDatabaseName() + "." + rp + "." + index +
             " WHERE time > now() -" + value + timeunit,

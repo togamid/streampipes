@@ -278,10 +278,10 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @GET
   @Path("/data/{index}/default/{name}")
   @Produces(MediaType.TEXT_PLAIN)
-  public Response writeMeasurementFromDefaulToCustomRententionPolicy(@PathParam("index") String index,
+  public Response assignMeasurementFromDefaulToCustomRententionPolicy(@PathParam("index") String index,
           @PathParam("name") String policyRetentionName) {
-      this.dataLakeManagement.writeMeasurementFromDefaulToCustomRententionPolicy(index, policyRetentionName);
-      return Response.ok("Wrote measurement to other retention policy.", MediaType.TEXT_PLAIN).build();
+      this.dataLakeManagement.assignMeasurementFromDefaulToCustomRententionPolicy(index, policyRetentionName);
+      return Response.ok("Assigned measurement to other retention policy.", MediaType.TEXT_PLAIN).build();
   }
 
   @GET
