@@ -63,6 +63,7 @@ public enum BackendConfig {
     config.register(BackendConfigKeys.INFLUX_HOST, "influxdb", "The host of the influx data base");
     config.register(BackendConfigKeys.INFLUX_PORT, 8086, "The hist of the influx data base");
     config.register(BackendConfigKeys.INFLUX_DATA_BASE, "sp", "The influx data base name");
+    config.register(BackendConfigKeys.INFLUX_DEFAULT_RETENTION_POLICY, "autogen", "The influx default retention policy name");
     config.registerObject(BackendConfigKeys.MESSAGING_SETTINGS, MessagingSettings.fromDefault(),
             "Default Messaging Settings");
 
@@ -222,6 +223,10 @@ public enum BackendConfig {
 
   public String getInfluxDatabaseName() {
     return config.getString(BackendConfigKeys.INFLUX_DATA_BASE);
+  }
+
+  public String getDefaultRetentionPolicyName() {
+    return config.getString(BackendConfigKeys.INFLUX_DEFAULT_RETENTION_POLICY);
   }
 
   public String getEncryptionKey() {

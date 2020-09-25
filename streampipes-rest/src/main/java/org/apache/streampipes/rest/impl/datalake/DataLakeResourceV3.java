@@ -55,13 +55,14 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
 
     PageResult result;
     String page = info.getQueryParameters().getFirst("page");
+    String pr = info.getQueryParameters().getFirst("retentionPolicy");
 
     try {
 
       if (page != null) {
-        result = this.dataLakeManagement.getEvents(index, itemsPerPage, Integer.parseInt(page));
+        result = this.dataLakeManagement.getEvents(index, itemsPerPage, Integer.parseInt(page), pr);
       } else {
-        result = this.dataLakeManagement.getEvents(index, itemsPerPage);
+        result = this.dataLakeManagement.getEvents(index, itemsPerPage, pr);
       }
       return Response.ok(result).build();
     } catch (IOException e) {
@@ -86,8 +87,11 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   @Path("/data/{index}")
   public Response getAllData(@PathParam("index") String index,
-                             @QueryParam("format") String format) {
-    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format);
+                             @QueryParam("format") String format,
+                             @Context UriInfo info) {
+
+    String pr = info.getQueryParameters().getFirst("retentionPolicy");
+    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format, pr);
 
     return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
             header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
@@ -98,8 +102,11 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   @Path("/data/{index}/download")
   public Response downloadData(@PathParam("index") String index,
-                               @QueryParam("format") String format) {
-    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format);
+                               @QueryParam("format") String format,
+                               @Context UriInfo info) {
+
+    String pr = info.getQueryParameters().getFirst("retentionPolicy");
+    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format, pr);
 
     return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
             header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
@@ -108,10 +115,8 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
 
   @GET
   @Path("/data/{index}/delete")
-  // @Produces(MediaType.APPLICATION_JSON)
   public void deleteMeasurement(@PathParam("index") String index) {
     dataLakeManagement.deleteMeasurement(index);
-    // return ok("John");
   }
 
   @GET
@@ -125,14 +130,15 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
 
     String aggregationUnit = info.getQueryParameters().getFirst("aggregationUnit");
     String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
+    String pr = info.getQueryParameters().getFirst("retentionPolicy");
 
     DataResult result;
     try {
       if (aggregationUnit != null && aggregationValue != null) {
         result = dataLakeManagement.getEventsFromNow(index, unit, value, aggregationUnit,
-                Integer.parseInt(aggregationValue));
+                Integer.parseInt(aggregationValue), pr);
       } else {
-        result = dataLakeManagement.getEventsFromNowAutoAggregation(index, unit, value);
+        result = dataLakeManagement.getEventsFromNowAutoAggregation(index, unit, value, pr);
       }
       return Response.ok(result).build();
     } catch (IllegalArgumentException e) {
@@ -153,16 +159,17 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
 
     String aggregationUnit = info.getQueryParameters().getFirst("aggregationUnit");
     String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
+    String pr = info.getQueryParameters().getFirst("retentionPolicy");
 
     DataResult result;
 
     try {
       if (aggregationUnit != null && aggregationValue != null) {
           result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
-                  Integer.parseInt(aggregationValue));
+                  Integer.parseInt(aggregationValue), pr);
 
       } else {
-          result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate);
+          result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate, pr);
       }
       return Response.ok(result).build();
     } catch (IllegalArgumentException | ParseException e) {
@@ -181,14 +188,15 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
 
     String aggregationUnit = info.getQueryParameters().getFirst("aggregationUnit");
     String aggregationValue = info.getQueryParameters().getFirst("aggregationValue");
+    String pr = info.getQueryParameters().getFirst("retentionPolicy");
 
     GroupedDataResult result;
     try {
       if (aggregationUnit != null && aggregationValue != null) {
           result = dataLakeManagement.getEvents(index, startdate, enddate, aggregationUnit,
-                  Integer.parseInt(aggregationValue), groupingTag);
+                  Integer.parseInt(aggregationValue), groupingTag, pr);
       } else {
-          result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate, groupingTag);
+          result = dataLakeManagement.getEventsAutoAggregation(index, startdate, enddate, groupingTag, pr);
       }
       return Response.ok(result).build();
     } catch (IllegalArgumentException | ParseException e) {
@@ -210,8 +218,11 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   @Path("/data/{index}/{startdate}/{enddate}/download")
   public Response downloadData(@PathParam("index") String index, @QueryParam("format") String format,
-                               @PathParam("startdate") long start, @PathParam("enddate") long end) {
-    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format, start, end);
+                               @PathParam("startdate") long start, @PathParam("enddate") long end,
+                               @Context UriInfo info) {
+
+    String pr = info.getQueryParameters().getFirst("retentionPolicy");
+    StreamingOutput streamingOutput = dataLakeManagement.getAllEvents(index, format, start, end, pr);
 
     return Response.ok(streamingOutput, MediaType.APPLICATION_OCTET_STREAM).
             header("Content-Disposition", "attachment; filename=\"datalake." + format + "\"")
@@ -221,8 +232,10 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @GET
   @Produces(MediaType.TEXT_PLAIN)
   @Path("/data/{index}/count")
-  public Response getNumOfRecordsOfTable(@PathParam("index") String index) {
-      Double numOfRecords = dataLakeManagement.getNumOfRecordsOfTable(index);
+  public Response getNumOfRecordsOfTable(@PathParam("index") String index,
+                                         @Context UriInfo info){
+      String pr = info.getQueryParameters().getFirst("retentionPolicy");
+      Double numOfRecords = dataLakeManagement.getNumOfRecordsOfTable(index, pr);
       return Response.ok(numOfRecords, MediaType.TEXT_PLAIN).build();
   }
 
@@ -256,7 +269,8 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
                             @PathParam("column") String column) {
 
       String label = info.getQueryParameters().getFirst("label");
-      this.dataLakeManagement.updateLabels(index, column, startdate, enddate, label);
+      String pr = info.getQueryParameters().getFirst("retentionPolicy");
+      this.dataLakeManagement.updateLabels(index, column, startdate, enddate, label, pr);
 
       return Response.ok("Successfully updated database.", MediaType.TEXT_PLAIN).build();
   }
@@ -281,7 +295,6 @@ public class DataLakeResourceV3 extends AbstractRestInterface {
   @Path("/policy/{name}/delete")
   @Produces(MediaType.TEXT_PLAIN)
   public Response deleteRetentionPolicy(@PathParam("name") String policyName) {
-    dataLakeManagement.deleteRetentionPolicy(policyName);
     if (dataLakeManagement.deleteRetentionPolicy(policyName)) {
       return Response.ok("Successfully deleted the retention policy.", MediaType.TEXT_PLAIN).build();
     } else {
