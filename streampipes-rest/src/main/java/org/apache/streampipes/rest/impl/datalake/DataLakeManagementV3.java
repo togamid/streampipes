@@ -239,7 +239,6 @@ public class DataLakeManagementV3 {
 
     if (rp == null) rp = BackendConfig.INSTANCE.getDefaultRetentionPolicyName();
 
-
     Query query = new Query("SELECT * FROM "
             + BackendConfig.INSTANCE.getInfluxDatabaseName() + "." + rp + "." + index
             + " ORDER BY time LIMIT " + itemsPerPage + " OFFSET " + page * itemsPerPage,
@@ -254,6 +253,22 @@ public class DataLakeManagementV3 {
     return new PageResult(dataResult.getTotal(), dataResult.getHeaders(), dataResult.getRows(), page, pageSum);
   }
 
+  public void writeMeasurementFromDefaulToCustomRententionPolicy(String index, String rp) {
+    InfluxDB influxDB = getInfluxDBClient();
+    String rp_default = BackendConfig.INSTANCE.getDefaultRetentionPolicyName();
+
+    QueryResult result = influxDB.query(new Query("SELECT * INTO " +
+            BackendConfig.INSTANCE.getInfluxDatabaseName() + "." + rp + "." + index + "_temp"
+            + " FROM " + BackendConfig.INSTANCE.getInfluxDatabaseName() + "." + rp_default + "." + index));
+    deleteMeasurement(index);
+
+    QueryResult result_2 = influxDB.query(new Query("SELECT * INTO " +
+            BackendConfig.INSTANCE.getInfluxDatabaseName() + "." + rp + "." + index
+            + " FROM " + BackendConfig.INSTANCE.getInfluxDatabaseName() + "." + rp + "." + index + "_temp"));
+    deleteMeasurement(index + "_temp");
+    influxDB.close();
+
+  }
 
   public DataResult getRetentionPoliciesOfDatabase() {
     InfluxDB influxDB = getInfluxDBClient();
@@ -276,9 +291,7 @@ public class DataLakeManagementV3 {
     if (shardDuration != null)  { shardDurationString = " SHARD DURATION " + shardDuration; }
 
     Query query = new Query("CREATE RETENTION POLICY "
-            + rp
-            + " ON "
-            + BackendConfig.INSTANCE.getInfluxDatabaseName()
+            + rp + " ON " + BackendConfig.INSTANCE.getInfluxDatabaseName()
             + durationString
             + replicationString
             + shardDurationString,
@@ -305,9 +318,7 @@ public class DataLakeManagementV3 {
     if (shardDuration != null)  { shardDurationString = " SHARD DURATION " + shardDuration; }
 
     Query query = new Query("ALTER RETENTION POLICY "
-            + rp
-            + " ON "
-            + BackendConfig.INSTANCE.getInfluxDatabaseName()
+            + rp + " ON " + BackendConfig.INSTANCE.getInfluxDatabaseName()
             + durationString
             + replicationString
             + shardDurationString,
@@ -381,24 +392,15 @@ public class DataLakeManagementV3 {
     return storageSize;
   }
 
-  public static void main(String [] args) {
-    DataLakeManagementV3 dlmv3 = new DataLakeManagementV3();
-    InfluxDB influxDB = dlmv3.getInfluxDBClient();
-    long size = dlmv3.getStorageSizeOfDatabase();
-    System.out.println(size);
-    // dlmv3.deleteRetentionPolicy("rp10");
-    // DataResult result = dlmv3.getRetentionPoliciesOfDatabase();
-    // dlmv3.createRetentionPolicy("rp8", "1h", null, 5, Boolean.FALSE);
-    System.out.println(dlmv3.getNumOfRecordsOfTable("felix4", null));
-  }
-
   public void deleteMeasurement(String index) {
 
     InfluxDB influxDB = getInfluxDBClient();
+    influxDB.setDatabase(BackendConfig.INSTANCE.getInfluxDatabaseName());
     Query query = new Query("DROP MEASUREMENT " + index);
     QueryResult influx_result = influxDB.query(query);
 
     if (influx_result.hasError() || influx_result.getResults().get(0).getError() != null) {
+      System.out.println(influx_result.getResults().get(0).getError());
       System.out.println("Error!");
       // TODO: Raise error exception
     }
@@ -419,7 +421,6 @@ public class DataLakeManagementV3 {
     }
 
     couchDbClient.shutdown();
-
     // TODO: Raise exception if both not successful
   }
 
