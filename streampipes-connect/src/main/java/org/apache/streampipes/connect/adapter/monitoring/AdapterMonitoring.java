@@ -16,18 +16,19 @@
  *
  */
 
-package org.apache.streampipes.connect.adapter.model.specific;
+package org.apache.streampipes.connect.adapter.monitoring;
 
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
+import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class SpecificDataSetAdapter extends SpecificAdapter<SpecificAdapterSetDescription> {
+public class AdapterMonitoring {
+    private ConcurrentHashMap<String, AdapterStatus> adapterStatus;
 
-    public SpecificDataSetAdapter() {
-        super();
+    public AdapterMonitoring() {
+        // Should I start the thread here?
+        this.adapterStatus = new ConcurrentHashMap<>();
     }
 
-    public SpecificDataSetAdapter(SpecificAdapterSetDescription adapterDescription) {
-        super(adapterDescription);
+    public ConcurrentHashMap<String, AdapterStatus> getAdapterStatus() {
+        return adapterStatus;
     }
-
 }

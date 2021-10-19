@@ -56,6 +56,9 @@ public class ConnectWorkerRegistrationService {
         }
       }
     }
+
+
+
   }
 
   private List<String> getConnectMasterUrl() {

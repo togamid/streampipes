@@ -35,10 +35,6 @@ public class GenericDataStreamAdapter extends GenericAdapter<GenericAdapterStrea
         super();
     }
 
-    public GenericDataStreamAdapter(GenericAdapterStreamDescription adapterDescription, boolean debug) {
-        super(adapterDescription, debug);
-    }
-
     public GenericDataStreamAdapter(GenericAdapterStreamDescription adapterDescription) {
         super(adapterDescription);
     }

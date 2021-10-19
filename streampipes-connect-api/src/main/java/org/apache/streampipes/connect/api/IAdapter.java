@@ -38,5 +38,4 @@ public interface IAdapter<T extends AdapterDescription> extends Connector {
 
   void changeEventGrounding(TransportProtocol transportProtocol);
 
-  boolean isDebug();
 }

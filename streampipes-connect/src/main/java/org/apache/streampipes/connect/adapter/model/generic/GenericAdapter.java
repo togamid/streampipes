@@ -42,10 +42,6 @@ public abstract class GenericAdapter<T extends AdapterDescription> extends Adapt
         super(adapterDescription);
     }
 
-    public GenericAdapter(T adapterDescription, boolean debug) {
-        super(adapterDescription, debug);
-    }
-
     public GenericAdapter() {
         super();
     }

@@ -16,18 +16,31 @@
  *
  */
 
-package org.apache.streampipes.connect.adapter.model.specific;
+package org.apache.streampipes.connect.adapter.monitoring;
 
-import org.apache.streampipes.model.connect.adapter.SpecificAdapterSetDescription;
+public class AdapterStatus {
+    private long timestamp;
+    private int count;
 
-public abstract class SpecificDataSetAdapter extends SpecificAdapter<SpecificAdapterSetDescription> {
-
-    public SpecificDataSetAdapter() {
-        super();
+    public AdapterStatus() {
+        reset();
     }
 
-    public SpecificDataSetAdapter(SpecificAdapterSetDescription adapterDescription) {
-        super(adapterDescription);
+    public void reset() {
+        timestamp = -1;
+        count = 0;
     }
 
+    public void increaseCount(long newTimestamp) {
+        this.timestamp = newTimestamp;
+        this.count++;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public int getCount() {
+        return count;
+    }
 }

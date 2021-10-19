@@ -35,11 +35,6 @@ public class GenericDataSetAdapter extends GenericAdapter<GenericAdapterSetDescr
         super();
     }
 
-
-    public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription, boolean debug) {
-        super(adapterDescription, debug);
-    }
-
     public GenericDataSetAdapter(GenericAdapterSetDescription adapterDescription) {
         super(adapterDescription);
     }

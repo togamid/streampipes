@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect.adapter.model.pipeline;
 
+import org.apache.streampipes.connect.adapter.monitoring.AdapterMonitoring;
 import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 
@@ -29,10 +30,7 @@ public class AdapterPipeline implements IAdapterPipeline {
     private List<IAdapterPipelineElement> pipelineElements;
     private IAdapterPipelineElement pipelineSink;
 
-
-    public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements) {
-        this.pipelineElements = pipelineElements;
-    }
+    private AdapterMonitoring adapterMonitoring;
 
     public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements, IAdapterPipelineElement pipelineSink) {
         this.pipelineElements = pipelineElements;
@@ -42,16 +40,13 @@ public class AdapterPipeline implements IAdapterPipeline {
     @Override
     public void process(Map<String, Object> event) {
 
-        // TODO remove, just for performance tests
-        if ("true".equals(System.getenv("SP_DEBUG_CONNECT"))) {
-            event.put("internal_t1", System.currentTimeMillis());
-        }
-
-
         for (IAdapterPipelineElement pipelineElement : pipelineElements) {
             event = pipelineElement.process(event);
         }
+
         if (pipelineSink != null) {
+            // Write to statistics here
+
             pipelineSink.process(event);
         }
 

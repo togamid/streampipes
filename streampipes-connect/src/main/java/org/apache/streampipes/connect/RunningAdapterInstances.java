@@ -18,6 +18,7 @@
 
 package org.apache.streampipes.connect;
 
+import org.apache.streampipes.connect.adapter.monitoring.AdapterMonitoring;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
@@ -30,6 +31,8 @@ public enum RunningAdapterInstances {
 
     private final Map<String, IAdapter<?>> runningAdapterInstances = new HashMap<>();
     private final Map<String, AdapterDescription> runningAdapterDescriptionInstances = new HashMap<>();
+
+    private AdapterMonitoring adapterMonitoring = new AdapterMonitoring();
 
     public void addAdapter(String elementId, IAdapter<?> adapter, AdapterDescription adapterDescription) {
         runningAdapterInstances.put(elementId, adapter);

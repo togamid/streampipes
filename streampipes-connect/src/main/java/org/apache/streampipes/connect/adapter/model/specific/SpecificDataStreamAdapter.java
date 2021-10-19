@@ -29,9 +29,4 @@ public abstract class SpecificDataStreamAdapter extends SpecificAdapter<Specific
     public SpecificDataStreamAdapter(SpecificAdapterStreamDescription adapterDescription) {
         super(adapterDescription);
     }
-
-    public SpecificDataStreamAdapter(SpecificAdapterStreamDescription adapterDescription, boolean debug) {
-        super(adapterDescription, debug);
-    }
-
 }

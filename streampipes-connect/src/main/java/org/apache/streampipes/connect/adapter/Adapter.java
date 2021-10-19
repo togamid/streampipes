@@ -44,28 +44,21 @@ import java.util.List;
 public abstract class Adapter<T extends AdapterDescription> implements IAdapter<T> {
     Logger logger = LoggerFactory.getLogger(Adapter.class);
 
-    private boolean debug;
-
     protected AdapterPipeline adapterPipeline;
 
     protected T adapterDescription;
 
-    public Adapter(T adapterDescription, boolean debug) {
-        this.adapterDescription = adapterDescription;
-        this.debug = debug;
-        this.adapterPipeline = getAdapterPipeline(adapterDescription);
+    public Adapter() {
     }
 
     public Adapter(T adapterDescription) {
-        this(adapterDescription, false);
-    }
+        this.adapterDescription = adapterDescription;
 
-    public Adapter(boolean debug) {
-        this.debug = debug;
-    }
+        if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
+                && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
 
-    public Adapter() {
-        this(false);
+            this.adapterPipeline = getAdapterPipeline(adapterDescription);
+        }
     }
 
     @Override
@@ -134,13 +127,7 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
         }
         pipelineElements.add(transformStreamAdapterElement);
 
-        // Needed when adapter is (
-        if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
-                && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
-            return new AdapterPipeline(pipelineElements, getAdapterSink(adapterDescription));
-        }
-
-        return new AdapterPipeline(pipelineElements);
+        return new AdapterPipeline(pipelineElements, getAdapterSink(adapterDescription));
     }
 
     private SendToBrokerAdapterSink<?> getAdapterSink(AdapterDescription adapterDescription) {
@@ -190,10 +177,4 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
 
         return null;
     }
-
-    @Override
-    public boolean isDebug() {
-        return debug;
-    }
-
 }
