@@ -18,9 +18,9 @@
 
 package org.apache.streampipes.connect.adapter.model.pipeline;
 
-import org.apache.streampipes.connect.adapter.monitoring.AdapterMonitoring;
 import org.apache.streampipes.connect.api.IAdapterPipeline;
 import org.apache.streampipes.connect.api.IAdapterPipelineElement;
+import org.apache.streampipes.monitoring.AdapterStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -30,11 +30,18 @@ public class AdapterPipeline implements IAdapterPipeline {
     private List<IAdapterPipelineElement> pipelineElements;
     private IAdapterPipelineElement pipelineSink;
 
-    private AdapterMonitoring adapterMonitoring;
+    private AdapterStatus adapterStatus;
+    private String timestampField;
 
-    public AdapterPipeline(List<IAdapterPipelineElement> pipelineElements, IAdapterPipelineElement pipelineSink) {
+    public AdapterPipeline(
+            List<IAdapterPipelineElement> pipelineElements,
+            IAdapterPipelineElement pipelineSink,
+            AdapterStatus adapterStatus,
+            String timestampField) {
         this.pipelineElements = pipelineElements;
         this.pipelineSink = pipelineSink;
+        this.adapterStatus = adapterStatus;
+        this.timestampField = timestampField;
     }
 
     @Override
@@ -46,6 +53,7 @@ public class AdapterPipeline implements IAdapterPipeline {
 
         if (pipelineSink != null) {
             // Write to statistics here
+            this.adapterStatus.increaseCount((Long) event.get(timestampField));
 
             pipelineSink.process(event);
         }

@@ -22,6 +22,7 @@ import org.apache.streampipes.connect.api.exception.ParseException;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.guess.GuessSchema;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.monitoring.AdapterStatus;
 
 public interface IAdapter<T extends AdapterDescription> extends Connector {
 
@@ -35,6 +36,8 @@ public interface IAdapter<T extends AdapterDescription> extends Connector {
   IAdapter getInstance(T adapterDescription);
 
   GuessSchema getSchema(T adapterDescription) throws AdapterException, ParseException;
+
+  void init(AdapterStatus adapterStatus, String timestampField);
 
   void changeEventGrounding(TransportProtocol transportProtocol);
 

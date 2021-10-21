@@ -21,9 +21,9 @@ package org.apache.streampipes.connect.adapter;
 import org.apache.streampipes.config.backend.BackendConfig;
 import org.apache.streampipes.config.backend.SpProtocol;
 import org.apache.streampipes.connect.adapter.model.pipeline.AdapterPipeline;
-import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.connect.adapter.preprocessing.elements.*;
 import org.apache.streampipes.connect.api.IAdapter;
+import org.apache.streampipes.connect.api.IAdapterPipelineElement;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 import org.apache.streampipes.model.connect.rules.TransformationRuleDescription;
 import org.apache.streampipes.model.connect.rules.stream.EventRateTransformationRuleDescription;
@@ -35,6 +35,7 @@ import org.apache.streampipes.model.grounding.JmsTransportProtocol;
 import org.apache.streampipes.model.grounding.KafkaTransportProtocol;
 import org.apache.streampipes.model.grounding.MqttTransportProtocol;
 import org.apache.streampipes.model.grounding.TransportProtocol;
+import org.apache.streampipes.monitoring.AdapterStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,11 +54,14 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
 
     public Adapter(T adapterDescription) {
         this.adapterDescription = adapterDescription;
+    }
 
+    public void init(AdapterStatus adapterStatus,
+                            String timestampField) {
         if (adapterDescription.getEventGrounding() != null && adapterDescription.getEventGrounding().getTransportProtocol() != null
                 && adapterDescription.getEventGrounding().getTransportProtocol().getBrokerHostname() != null) {
 
-            this.adapterPipeline = getAdapterPipeline(adapterDescription);
+            this.adapterPipeline = getAdapterPipeline(adapterDescription, adapterStatus, timestampField);
         }
     }
 
@@ -90,7 +94,9 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
         }
     }
 
-    private AdapterPipeline getAdapterPipeline(T adapterDescription) {
+    private AdapterPipeline getAdapterPipeline(T adapterDescription,
+            AdapterStatus adapterStatus,
+            String timestampField) {
 
         List<IAdapterPipelineElement> pipelineElements = new ArrayList<>();
 
@@ -127,7 +133,11 @@ public abstract class Adapter<T extends AdapterDescription> implements IAdapter<
         }
         pipelineElements.add(transformStreamAdapterElement);
 
-        return new AdapterPipeline(pipelineElements, getAdapterSink(adapterDescription));
+        return new AdapterPipeline(
+                pipelineElements,
+                getAdapterSink(adapterDescription),
+                adapterStatus,
+                timestampField);
     }
 
     private SendToBrokerAdapterSink<?> getAdapterSink(AdapterDescription adapterDescription) {

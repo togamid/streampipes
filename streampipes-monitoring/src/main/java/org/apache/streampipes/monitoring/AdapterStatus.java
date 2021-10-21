@@ -16,10 +16,11 @@
  *
  */
 
-package org.apache.streampipes.connect.adapter.monitoring;
+package org.apache.streampipes.monitoring;
 
 public class AdapterStatus {
     private long timestamp;
+    private long lastEvent;
     private int count;
 
     public AdapterStatus() {
@@ -31,9 +32,13 @@ public class AdapterStatus {
         count = 0;
     }
 
-    public void increaseCount(long newTimestamp) {
-        this.timestamp = newTimestamp;
+    public void increaseCount(Long newTimestamp) {
+        this.lastEvent = newTimestamp;
         this.count++;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public long getTimestamp() {
@@ -42,5 +47,9 @@ public class AdapterStatus {
 
     public int getCount() {
         return count;
+    }
+
+    public long getLastEvent() {
+        return lastEvent;
     }
 }

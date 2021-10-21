@@ -22,7 +22,8 @@ import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuild
 
 describe('Test File Stream Adapter', () => {
   before('Setup Test', () => {
-    cy.initStreamPipesTest();
+    // cy.initStreamPipesTest();
+    cy.login();
     FileManagementUtils.addFile('fileTest/random.csv');
   });
 
@@ -39,7 +40,7 @@ describe('Test File Stream Adapter', () => {
       .build();
 
     AdapterUtils.testGenericStreamAdapter(adapterInput);
-    AdapterUtils.deleteAdapter();
+    // AdapterUtils.deleteAdapter();
   });
 
 });

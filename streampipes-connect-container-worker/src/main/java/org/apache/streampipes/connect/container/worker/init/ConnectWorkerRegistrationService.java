@@ -17,6 +17,7 @@
  */
 package org.apache.streampipes.connect.container.worker.init;
 
+import org.apache.streampipes.connect.RunningAdapterInstances;
 import org.apache.streampipes.connect.container.worker.management.MasterRestClient;
 import org.apache.streampipes.container.model.SpServiceDefinition;
 import org.apache.streampipes.svcdiscovery.SpServiceDiscovery;
@@ -57,6 +58,7 @@ public class ConnectWorkerRegistrationService {
       }
     }
 
+    RunningAdapterInstances.INSTANCE.init();
 
 
   }

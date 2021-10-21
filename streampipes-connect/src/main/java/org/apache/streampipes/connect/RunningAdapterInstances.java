@@ -18,9 +18,10 @@
 
 package org.apache.streampipes.connect;
 
-import org.apache.streampipes.connect.adapter.monitoring.AdapterMonitoring;
 import org.apache.streampipes.connect.api.IAdapter;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
+import org.apache.streampipes.monitoring.AdapterMonitoring;
+import org.apache.streampipes.monitoring.AdapterStatus;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,11 +36,20 @@ public enum RunningAdapterInstances {
     private AdapterMonitoring adapterMonitoring = new AdapterMonitoring();
 
     public void addAdapter(String elementId, IAdapter<?> adapter, AdapterDescription adapterDescription) {
+
+        AdapterStatus adapterStatus = new AdapterStatus();
+        // TODO read timestamp dynamically
+        adapter.init(adapterStatus, "timestamp");
+
+        adapterMonitoring.put(elementId, adapterStatus);
         runningAdapterInstances.put(elementId, adapter);
+
         runningAdapterDescriptionInstances.put(elementId, adapterDescription);
     }
 
     public IAdapter<?> removeAdapter(String elementId) {
+
+        adapterMonitoring.remove(elementId);
         IAdapter<?> result = runningAdapterInstances.get(elementId);
         runningAdapterInstances.remove(elementId);
         runningAdapterDescriptionInstances.remove(elementId);
@@ -48,6 +58,10 @@ public enum RunningAdapterInstances {
 
     public Collection<AdapterDescription> getAllRunningAdapterDescriptions() {
        return this.runningAdapterDescriptionInstances.values();
+    }
+
+    public void init() {
+        this.adapterMonitoring.init();
     }
 
 
