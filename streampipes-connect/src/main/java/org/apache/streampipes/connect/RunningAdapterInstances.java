@@ -37,7 +37,7 @@ public enum RunningAdapterInstances {
 
     public void addAdapter(String elementId, IAdapter<?> adapter, AdapterDescription adapterDescription) {
 
-        AdapterStatus adapterStatus = new AdapterStatus();
+        AdapterStatus adapterStatus = new AdapterStatus(elementId);
         // TODO read timestamp dynamically
         adapter.init(adapterStatus, "timestamp");
 

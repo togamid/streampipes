@@ -18,16 +18,24 @@
 
 package org.apache.streampipes.monitoring;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.streampipes.messaging.kafka.SpKafkaProducer;
+import org.apache.streampipes.serializers.json.JacksonSerializer;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AdapterMonitoring {
 
     private ConcurrentHashMap<String, AdapterStatus> adapterStatus;
     private Thread monitoringThread;
+    // TODO  should it only work with Kafka?
+    // To make it generic, reuse SendToBrokerAdapter sink in connect
+    private SpKafkaProducer spKafkaProducer;
 
     public AdapterMonitoring() {
         // Should I start the thread here?
         this.adapterStatus = new ConcurrentHashMap<>();
+        this.spKafkaProducer = new SpKafkaProducer("localhost:9094", "adapterstatus");
     }
 
     public ConcurrentHashMap<String, AdapterStatus> getAdapterStatus() {
@@ -46,12 +54,18 @@ public class AdapterMonitoring {
         Runnable runnable = () -> {
             while(true) {
                 try {
-                    System.out.println("Currently: " + getAdapterStatus().size() + " adapters are running.");
+//                    System.out.println("Currently: " + getAdapterStatus().size() + " adapters are running.");
                     long currentTimestamp = System.currentTimeMillis();
                     getAdapterStatus().forEach((s, adapterStatus) -> {
                         adapterStatus.setTimestamp(currentTimestamp);
-                        System.out.println("Adapter: " + s + " produced " + adapterStatus.getCount() + " events");
 
+                        try {
+                            String serializedAdapterStatus = JacksonSerializer.getObjectMapper().writeValueAsString(adapterStatus);
+                            this.spKafkaProducer.publish(serializedAdapterStatus);
+                            System.out.println(serializedAdapterStatus);
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
+                        }
 
 
                         adapterStatus.reset();

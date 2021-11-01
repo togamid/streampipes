@@ -19,11 +19,13 @@
 package org.apache.streampipes.monitoring;
 
 public class AdapterStatus {
+    private String adapterId;
     private long timestamp;
     private long lastEvent;
     private int count;
 
-    public AdapterStatus() {
+    public AdapterStatus(String adapterId) {
+        this.adapterId = adapterId;
         reset();
     }
 
@@ -51,5 +53,13 @@ public class AdapterStatus {
 
     public long getLastEvent() {
         return lastEvent;
+    }
+
+    public String getAdapterId() {
+        return adapterId;
+    }
+
+    public void setAdapterId(String adapterId) {
+        this.adapterId = adapterId;
     }
 }
