@@ -16,26 +16,12 @@
  *
  */
 
-import { ProcessingElementTestUtils } from '../../support/utils/ProcessingElementTestUtils';
-import { ProcessorTest } from '../../support/model/ProcessorTest';
+.marginColorField {
+  margin-left: 1px;
+  margin-right: 1px;
+}
 
-const allTests = Cypress.env('processingElements');
-
-allTests.forEach(test => {
-  const testNames = ['textFilter1', 'projection1', 'thresholdDetection1'];
-
-  const processorTest = test as ProcessorTest;
-
-  if (testNames.includes(processorTest.name)) {
-
-    describe('Test Processor ' + test.dir, () => {
-      before('Setup Test', () => {
-        cy.initStreamPipesTest();
-      });
-
-      it('Initialize Test', () => {
-        ProcessingElementTestUtils.testElement(processorTest);
-      });
-    });
-  }
-});
+.marginColorFieldRight {
+  margin-left: 1px;
+  margin-right: 5px;
+}
