@@ -17,7 +17,12 @@
  */
 
 import { Component, Input, OnInit } from '@angular/core';
-import { AdapterDescriptionUnion } from '../../../../core-model/gen/streampipes-model';
+import { AdapterDescriptionUnion, SpQueryResult } from '../../../../core-model/gen/streampipes-model';
+import { DatalakeRestService } from '../../../../platform-services/apis/datalake-rest.service';
+import { DatalakeQueryParameterBuilder } from '../../../../core-services/datalake/DatalakeQueryParameterBuilder';
+import { FieldConfig } from '../../../../data-explorer/models/dataview-dashboard.model';
+import { EChartsOption } from 'echarts';
+
 
 @Component({
   selector: 'sp-adapter-details',
@@ -29,10 +34,53 @@ export class AdapterDetailsComponent implements OnInit {
   @Input()
   adapterDetails: AdapterDescriptionUnion;
 
-  constructor() {
+  constructor(
+    protected dataLakeRestService: DatalakeRestService) {
   }
 
+  chartOption: EChartsOption = undefined;
+  data: any[] = undefined;
+
   ngOnInit(): void {
+    const oneHour = 60 * 60 * 1000;
+    const now = new Date().getTime();
+
+
+    const countField: FieldConfig = { runtimeName: 'count', aggregations: ['SUM'], selected: true, numeric: false };
+
+    const queryParameters = DatalakeQueryParameterBuilder
+      .create(now - oneHour, now)
+      .withAggregation('m', 1)
+      .withColumnFilter([countField], true)
+      .build();
+
+    this.dataLakeRestService.getData('internalmonitoradapter', queryParameters).subscribe((res: SpQueryResult) => {
+      this.chartOption = this.transformData(res);
+    });
+  }
+
+  transformData(data: SpQueryResult): EChartsOption {
+    const chartOption: EChartsOption = {
+      xAxis: {
+        type: 'category',
+        data: []
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          data: [],
+          type: 'bar'
+        }
+      ]
+    };
+
+    data.allDataSeries[0].rows.forEach(row => {
+      chartOption.xAxis['data'].push(row[0]);
+      chartOption.series[0].data.push(row[1]);
+    });
+    return chartOption;
   }
 
 }

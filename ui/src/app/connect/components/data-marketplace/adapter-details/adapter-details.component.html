@@ -16,5 +16,21 @@
   ~
   -->
 
-<p>adapter-details works!</p>
-<h1>{{adapterDetails.elementId}}</h1>
+<div>
+    <div class="assembly-options-preview sp-blue-bg">
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <h4>Events per Minute</h4>
+        </div>
+    </div>
+    <div class="sp-blue-border">
+        <div fxFlex="100" fxLayoutAlign="center center" fxLayout="row" style="padding:10px">
+
+            <!--            <plotly-plot *ngIf="data !== undefined && data.length > 0 && !showNoDataInDateRange && !showIsLoadingData"-->
+            <!--                         [divId]="dataExplorerWidget._id"-->
+            <div echarts
+                 [options]="chartOption"
+                 [ngStyle]="{'width': '100%', 'height': '100%'}">
+            </div>
+        </div>
+    </div>
+</div>

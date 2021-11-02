@@ -82,9 +82,18 @@ import { StartAdapterConfigurationComponent } from './components/start-adapter-c
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
 import { AdapterDetailsComponent } from './components/data-marketplace/adapter-details/adapter-details.component';
 import { MyAdaptersComponent } from './components/data-marketplace/my-adapters/my-adapters.component';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 @NgModule({
   imports: [
+    NgxEchartsModule.forRoot({
+      /**
+       * This will import all modules from echarts.
+       * If you only need custom modules,
+       * please refer to [Custom Build] section.
+       */
+      echarts: () => import('echarts')
+    }),
     CoreUiModule,
     FormsModule,
     ReactiveFormsModule,
@@ -92,13 +101,13 @@ import { MyAdaptersComponent } from './components/data-marketplace/my-adapters/m
     FlexLayoutModule,
     MatGridListModule,
     CustomMaterialModule,
+    CoreUiModule,
     DragulaModule,
     MatProgressSpinnerModule,
     MatChipsModule,
     MatInputModule,
     MatFormFieldModule,
     MatSliderModule,
-    CoreUiModule,
     TreeModule.forRoot()
   ],
   exports: [
