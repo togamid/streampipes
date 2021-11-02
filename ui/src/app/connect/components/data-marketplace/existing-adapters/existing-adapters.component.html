@@ -86,6 +86,7 @@
                     <div fxLayout="row">
                         <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
                             <button (click)="showAdapterDetails(adapter)"
+                                    [attr.data-cy]="'details-' + adapter.name"
                                     color="accent"
                                     mat-button
                                     mat-icon-button

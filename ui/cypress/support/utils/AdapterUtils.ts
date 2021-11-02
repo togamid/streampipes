@@ -188,6 +188,12 @@ export class AdapterUtils {
     cy.get('button').contains('Close').parent().click();
   }
 
+  public static openAdapterDetails(adapterName: string) {
+    cy.visit('#/connect');
+    cy.get('div').contains('My Adapters').parent().click();
+    cy.dataCy('details-' + adapterName).click();
+  }
+
   public static deleteAdapter() {
     // Delete adapter
     cy.visit('#/connect');
