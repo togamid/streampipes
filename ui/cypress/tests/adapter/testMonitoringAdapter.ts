@@ -18,19 +18,35 @@
 
 import { AdapterUtils } from '../../support/utils/AdapterUtils';
 import { GenericAdapterBuilder } from '../../support/builder/GenericAdapterBuilder';
+import { FileManagementUtils } from '../../support/utils/FileManagementUtils';
 
 describe('Test File Stream Adapter', () => {
   before('Setup Test', () => {
-    // cy.initStreamPipesTest();
-    cy.login();
+    cy.initStreamPipesTest();
+    FileManagementUtils.addFile('fileTest/random.csv');
   });
 
   it('Perform Test', () => {
+    const one = GenericAdapterBuilder
+      .create('File_Stream')
+      .setName('File Stream Adapter Test 1')
+      .setTimestampProperty('timestamp')
+      .addProtocolInput('input', 'speed', '1')
+      .addProtocolInput('checkbox', 'replaceTimestamp', 'check')
+      .setFormat('csv')
+      .addFormatInput('input', 'delimiter', ';')
+      .addFormatInput('checkbox', 'header', 'check');
+    AdapterUtils.testGenericStreamAdapter(one.build());
+
+    one.setName('File Stream Adapter Test 1');
+    AdapterUtils.testGenericStreamAdapter(one.build());
 
     const adapterInput = GenericAdapterBuilder
       .create('Apache_Kafka')
-      .setName('Kafka4')
+      .setName('Internal Monitor Adapter')
       .setTimestampProperty('timestamp')
+      .setStoreInDataLake()
+      .addDimensionProperty('adapterId')
       .addProtocolInput('select', 'Unauthenticated', 'check')
       .addProtocolInput('input', 'host', 'localhost')
       .addProtocolInput('input', 'port', '9094')

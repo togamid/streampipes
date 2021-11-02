@@ -84,12 +84,16 @@
                 <th mat-header-cell *matHeaderCellDef> Action</th>
                 <td mat-cell *matCellDef="let adapter">
                     <div fxLayout="row">
-                        <!--                <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">-->
-                        <!--                    <button color="primary" mat-button mat-icon-button matTooltip="Show adapter"-->
-                        <!--                            matTooltipPosition="above"><i-->
-                        <!--                            class="material-icons">search</i>-->
-                        <!--                    </button>-->
-                        <!--                </span>-->
+                        <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
+                            <button (click)="showAdapterDetails(adapter)"
+                                    color="accent"
+                                    mat-button
+                                    mat-icon-button
+                                    matTooltip="Adapter Details"
+                                    matTooltipPosition="above">
+                                    <i class="material-icons">search</i>
+                            </button>
+                        </span>
                         <!--                        <span fxFlex fxFlexOrder="2" fxLayout="row" fxLayoutAlign="center center">-->
                         <!--                    <button color="primary" mat-button mat-icon-button matTooltip="Modify adapter"-->
                         <!--                            matTooltipPosition="above"-->
@@ -98,17 +102,17 @@
                         <!--                    </button>-->
                         <!--                </span>-->
                         <span fxFlex fxFlexOrder="1" fxLayout="row" fxLayoutAlign="center center">
-                    <button color="accent" mat-button mat-icon-button matTooltip="Create adapter template"
-                            matTooltipPosition="above" (click)="createTemplate(adapter)"><i
-                            class="material-icons">content_copy</i>
-                    </button>
-                </span>
+                            <button color="accent" mat-button mat-icon-button matTooltip="Create adapter template"
+                                    matTooltipPosition="above" (click)="createTemplate(adapter)"><i
+                                    class="material-icons">content_copy</i>
+                            </button>
+                        </span>
                         <span fxFlex fxFlexOrder="3" fxLayout="row" fxLayoutAlign="center center">
-                    <button color="accent" mat-button mat-icon-button matTooltip="Delete adapter"
-                            data-cy="delete" matTooltipPosition="above" (click)="deleteAdapter(adapter)">
-                        <i class="material-icons">delete</i>
-                    </button>
-                </span>
+                            <button color="accent" mat-button mat-icon-button matTooltip="Delete adapter"
+                                    data-cy="delete" matTooltipPosition="above" (click)="deleteAdapter(adapter)">
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </span>
                     </div>
                 </td>
             </ng-container>

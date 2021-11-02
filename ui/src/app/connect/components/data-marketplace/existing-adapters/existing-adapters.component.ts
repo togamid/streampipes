@@ -37,14 +37,14 @@ export class ExistingAdaptersComponent implements OnInit {
 
   _existingAdapters: AdapterDescriptionUnion[];
 
-  @Input()
-  filterTerm: string;
-
   @Output()
   updateAdapterEmitter: EventEmitter<void> = new EventEmitter<void>();
 
   @Output()
   createTemplateEmitter: EventEmitter<AdapterDescriptionUnion> = new EventEmitter<AdapterDescriptionUnion>();
+
+  @Output()
+  showAdapterDetailsEmitter: EventEmitter<AdapterDescriptionUnion> = new EventEmitter<AdapterDescriptionUnion>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   pageSize = 1;
@@ -103,10 +103,18 @@ export class ExistingAdaptersComponent implements OnInit {
         this.updateAdapterEmitter.emit();
       }
     });
-  };
+  }
+
+  viewAdapterDetails(adapter: AdapterDescriptionUnion): void {
+    console.log(adapter);
+  }
 
   createTemplate(adapter: AdapterDescriptionUnion): void {
     this.createTemplateEmitter.emit(adapter);
+  }
+
+  showAdapterDetails(adapter: AdapterDescriptionUnion): void {
+    this.showAdapterDetailsEmitter.emit(adapter);
   }
 
   @Input()

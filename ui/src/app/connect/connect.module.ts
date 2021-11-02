@@ -80,6 +80,8 @@ import { LoadingMessageComponent } from './components/schema-editor/loading-mess
 import { SchemaEditorHeaderComponent } from './components/schema-editor/schema-editor-header/schema-editor-header.component';
 import { StartAdapterConfigurationComponent } from './components/start-adapter-configuration/start-adapter-configuration.component';
 import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/delete-adapter-dialog.component';
+import { AdapterDetailsComponent } from './components/data-marketplace/adapter-details/adapter-details.component';
+import { MyAdaptersComponent } from './components/data-marketplace/my-adapters/my-adapters.component';
 
 @NgModule({
   imports: [
@@ -134,7 +136,9 @@ import { DeleteAdapterDialogComponent } from './dialog/delete-adapter-dialog/del
     ErrorMessageComponent,
     LoadingMessageComponent,
     SchemaEditorHeaderComponent,
-    StartAdapterConfigurationComponent
+    StartAdapterConfigurationComponent,
+    AdapterDetailsComponent,
+    MyAdaptersComponent
   ],
   providers: [
     RestService,
