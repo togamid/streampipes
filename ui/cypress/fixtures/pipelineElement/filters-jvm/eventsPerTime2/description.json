@@ -1,0 +1,30 @@
+{
+  "name": "events_per_time",
+  "config": [
+    {
+      "type": "input",
+      "selector": "number-of-events",
+      "value": "2"
+    },
+    {
+      "type": "input",
+      "selector": "time-window",
+      "value": "10"
+    },
+    {
+      "type": "radio",
+      "selector": "time-option",
+      "value": "Second"
+    },
+    {
+      "type": "radio",
+      "selector": "fire-option",
+      "value": "Each\\ event"
+    },
+    {
+      "type": "input",
+      "selector": "freeze-time",
+      "value": "4"
+    }
+  ]
+}

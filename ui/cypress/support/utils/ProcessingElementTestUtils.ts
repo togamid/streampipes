@@ -16,65 +16,64 @@
  *
  */
 
-import { FileManagementUtils } from './FileManagementUtils';
-import { AdapterUtils } from './AdapterUtils';
-import { PipelineElementInput } from '../model/PipelineElementInput';
 import { PipelineUtils } from './PipelineUtils';
 import { DataLakeUtils } from './DataLakeUtils';
 import { GenericAdapterBuilder } from '../builder/GenericAdapterBuilder';
 import { PipelineBuilder } from '../builder/PipelineBuilder';
 import { PipelineElementBuilder } from '../builder/PipelineElementBuilder';
 import { ProcessorTest } from '../model/ProcessorTest';
+import { FileManagementUtils } from './FileManagementUtils';
+import { AdapterUtils } from './AdapterUtils';
 
 export class ProcessingElementTestUtils {
 
-    public static testElement(pipelineElementTest: ProcessorTest) {
-        const inputFile = 'pipelineElement/' + pipelineElementTest.dir + '/' + pipelineElementTest.inputFile;
-        const expectedResultFile = 'pipelineElement/' + pipelineElementTest.dir + '/expected.csv';
+  public static testElement(pipelineElementTest: ProcessorTest) {
+    const inputFile = 'pipelineElement/' + pipelineElementTest.dir + '/' + pipelineElementTest.inputFile;
+    const expectedResultFile = 'pipelineElement/' + pipelineElementTest.dir + '/expected.csv';
 
-        let formatType;
-        pipelineElementTest.inputFile.endsWith('.csv') ? formatType = 'csv' : formatType = 'json_array_no_key';
+    let formatType;
+    pipelineElementTest.inputFile.endsWith('.csv') ? formatType = 'csv' : formatType = 'json_array_no_key';
 
-        FileManagementUtils.addFile(inputFile);
+    FileManagementUtils.addFile(inputFile);
 
-        const dataLakeIndex = pipelineElementTest.name.toLowerCase();
+    const dataLakeIndex = pipelineElementTest.name.toLowerCase();
 
-        const adapterName = pipelineElementTest.name.toLowerCase();
+    const adapterName = pipelineElementTest.name.toLowerCase();
 
-        // Build adapter
-        const adapterInputBuilder = GenericAdapterBuilder
-          .create('File_Set')
-          .setName(adapterName)
-          .setTimestampProperty('timestamp')
-          .setFormat(formatType);
+    // Build adapter
+    const adapterInputBuilder = GenericAdapterBuilder
+      .create('File_Set')
+      .setName(adapterName)
+      .setTimestampProperty('timestamp')
+      .setFormat(formatType);
 
-        if (formatType === 'csv') {
-            adapterInputBuilder
-              .addFormatInput('input', 'delimiter', ';')
-              .addFormatInput('checkbox', 'header', 'check');
-        }
-
-        const adapterInput = adapterInputBuilder.build();
-
-        AdapterUtils.addGenericSetAdapter(adapterInput);
-
-        // Build Pipeline
-        const pipelineInput = PipelineBuilder.create(pipelineElementTest.name)
-          .addSource(adapterName)
-          .addSourceType('set')
-          .addProcessingElement(pipelineElementTest.processor)
-          .addSink(
-            PipelineElementBuilder.create('data_lake')
-              .addInput('input', 'db_measurement', dataLakeIndex)
-              .build())
-          .build();
-
-        PipelineUtils.addPipeline(pipelineInput);
-
-        // Wait till data is stored
-        cy.wait(10000);
-
-        DataLakeUtils.checkResults(dataLakeIndex, 'cypress/fixtures/' + expectedResultFile);
-
+    if (formatType === 'csv') {
+      adapterInputBuilder
+        .addFormatInput('input', 'delimiter', ';')
+        .addFormatInput('checkbox', 'header', 'check');
     }
+
+    const adapterInput = adapterInputBuilder.build();
+
+    AdapterUtils.addGenericSetAdapter(adapterInput);
+
+    // Build Pipeline
+    const pipelineInput = PipelineBuilder.create(pipelineElementTest.name)
+      .addSource(adapterName)
+      .addSourceType('set')
+      .addProcessingElement(pipelineElementTest.processor)
+      .addSink(
+        PipelineElementBuilder.create('data_lake')
+          .addInput('input', 'db_measurement', dataLakeIndex)
+          .build())
+      .build();
+
+    PipelineUtils.addPipeline(pipelineInput);
+
+    // Wait till data is stored
+    cy.wait(10000);
+
+    DataLakeUtils.checkResults(dataLakeIndex, 'cypress/fixtures/' + expectedResultFile);
+
+  }
 }
