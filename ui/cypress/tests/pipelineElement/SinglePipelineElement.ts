@@ -22,7 +22,8 @@ import { ProcessorTest } from '../../support/model/ProcessorTest';
 const allTests = Cypress.env('processingElements');
 
 allTests.forEach(test => {
-  const testNames = ['eventsPerTime1', 'eventsPerTime2', 'eventsPerTime3', 'eventsPerTime4'];
+  const testNames = ['eventsPerTime2'];
+  // const testNames = ['eventsPerTime1', 'eventsPerTime2', 'eventsPerTime3', 'eventsPerTime4'];
 
   const processorTest = test as ProcessorTest;
 
