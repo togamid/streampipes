@@ -1,0 +1,1 @@
+... upcoming Python client for StreamPipes, stay tuned!
