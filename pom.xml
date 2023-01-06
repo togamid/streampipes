@@ -1551,6 +1551,18 @@
                 <javadoc.opts>-Xdoclint:none</javadoc.opts>
             </properties>
         </profile>
+		<profile>
+			<id>UnitTests</id>
+			<properties>
+				<testcase.groups>org.apache.streampipesdataexplorer.v4.query.writer.groups.UnitTest</testcase.groups>
+			</properties>
+		</profile>
+		<profile>
+			<id>IntegrationTests</id>
+			<properties>
+				<testcase.groups>package org.apache.streampipes.integration.groups.IntegrationTest</testcase.groups>
+			</properties>
+		</profile>
     </profiles>
 
     <!-- Build Settings -->
@@ -1930,6 +1942,7 @@
                         --add-opens java.base/java.base=ALL-UNNAMED
                         --add-opens java.base/java.util.stream=ALL-UNNAMED
                     </argLine>
+					<groups>${testcase.groups}</groups>
                 </configuration>
             </plugin>
         </plugins>

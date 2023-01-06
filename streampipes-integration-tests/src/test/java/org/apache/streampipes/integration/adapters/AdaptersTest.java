@@ -17,9 +17,11 @@
  */
 package org.apache.streampipes.integration.adapters;
 
+import org.apache.streampipes.integration.groups.IntegrationTest;
 import org.apache.streampipes.model.connect.adapter.AdapterDescription;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,7 @@ public class AdaptersTest {
     adapterTester.validateData(data);
   }
 
+  @Category(IntegrationTest.class)
   @Test
   public void testPulsarAdapter() throws Exception {
     try (PulsarAdapterTester pulsarAdapterTester = new PulsarAdapterTester()) {

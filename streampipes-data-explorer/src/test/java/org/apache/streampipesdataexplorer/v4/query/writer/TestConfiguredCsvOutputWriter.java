@@ -22,7 +22,9 @@ import org.apache.streampipes.dataexplorer.v4.ProvidedQueryParams;
 import org.apache.streampipes.dataexplorer.v4.query.writer.ConfiguredCsvOutputWriter;
 
 import com.google.common.base.Charsets;
+import org.apache.streampipesdataexplorer.v4.query.writer.groups.UnitTest;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,6 +36,7 @@ public class TestConfiguredCsvOutputWriter extends TestConfiguredOutputWriter {
 
   private static final String Expected = "time,string,number\n1668578077051,test,1\n1668578127050,test2,2\n";
 
+  @Category(UnitTest.class)
   @Test
   public void testCsvOutputWriter() throws IOException {
     var writer = new ConfiguredCsvOutputWriter();
