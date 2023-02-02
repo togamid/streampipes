@@ -15,9 +15,18 @@
 
 FROM eclipse-temurin:17-jre-focal
 
+ARG USERNAME=javauser
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
 # needed pkgs processors-image-processing-jvm
 RUN apt-get update && apt-get install ttf-dejavu-core && apt-get install fontconfig
 
 COPY target/streampipes-extensions-all-jvm.jar  /streampipes-extensions-all-jvm.jar
+
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
+
+USER $USERNAME
 
 ENTRYPOINT ["java", "-jar", "/streampipes-extensions-all-jvm.jar"]
