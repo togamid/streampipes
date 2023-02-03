@@ -25,7 +25,8 @@ RUN apt-get update && apt-get install ttf-dejavu-core && apt-get install fontcon
 COPY target/streampipes-extensions-all-jvm.jar  /streampipes-extensions-all-jvm.jar
 
 RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && chown $USERNAME:$USERNAME /streampipes-extensions-all-jvm.jar
 
 USER $USERNAME
 

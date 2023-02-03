@@ -22,7 +22,8 @@ ARG USER_GID=$USER_UID
 COPY target/streampipes-backend.jar  /streampipes-backend.jar
 
 RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && chown $USERNAME:$USERNAME /streampipes-backend.jar
 
 USER $USERNAME
 
