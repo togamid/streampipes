@@ -25,6 +25,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
     && chown $USERNAME:$USERNAME /streampipes-backend.jar
 
+RUN mkdir /home/javauser/.streampipes && chown -R $USERNAME:$USERNAME /home/javauser/.streampipes
 USER $USERNAME
 
 ENTRYPOINT ["java", "-jar", "/streampipes-backend.jar"]

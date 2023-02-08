@@ -43,7 +43,7 @@ services:
       - consul
       - couchdb
     volumes:
-      - backend:/root/.streampipes
+      - backend:/home/javauser/.streampipes
       - files:/spImages
     logging: *default-logging
     networks:
@@ -69,6 +69,8 @@ services:
       context: ./streampipes-extensions/streampipes-extensions-all-jvm
       dockerfile: Dockerfile
     image: streampipes_pipeline-elements-all-jvm:release-validation
+    depends_on:
+      - backend
     volumes:
       - files:/spImages
     logging: *default-logging
@@ -102,7 +104,7 @@ services:
         ipv4_address: 172.31.0.9
 
   couchdb:
-    image: couchdb:2.3.1
+    image: couchdb:3.3.1
     environment:
       - COUCHDB_USER=admin
       - COUCHDB_PASSWORD=admin
