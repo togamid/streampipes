@@ -18,6 +18,7 @@
 package org.apache.streampipes.extensions.all.jvm;
 
 import org.apache.streampipes.connect.iiot.ConnectAdapterIiotInit;
+import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.dataformat.cbor.CborDataFormatFactory;
 import org.apache.streampipes.dataformat.fst.FstDataFormatFactory;
 import org.apache.streampipes.dataformat.json.JsonDataFormatFactory;
@@ -31,6 +32,7 @@ import org.apache.streampipes.messaging.nats.SpNatsProtocolFactory;
 import org.apache.streampipes.pe.jvm.AllPipelineElementsInit;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
+import jakarta.annotation.PreDestroy;
 
 public class AllExtensionsInit extends ExtensionsModelSubmitter {
 
@@ -57,5 +59,12 @@ public class AllExtensionsInit extends ExtensionsModelSubmitter {
             new SpMqttProtocolFactory(),
             new SpNatsProtocolFactory())
         .build();
+  }
+
+  @PreDestroy
+  @Override
+  public void onExit() {
+    super.onExit();
+    FileProtocolUtils.deleteServiceStorageDir();
   }
 }

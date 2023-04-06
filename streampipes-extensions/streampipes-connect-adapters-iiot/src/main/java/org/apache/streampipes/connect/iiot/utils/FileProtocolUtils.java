@@ -22,6 +22,10 @@ import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.extensions.api.connect.exception.ParseException;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
 
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class FileProtocolUtils {
+
+  private static final Logger LOG = LoggerFactory.getLogger(FileProtocolUtils.class);
 
   public static InputStream getFileInputStream(String selectedFilename) throws FileNotFoundException {
     if (!isFilePresent(selectedFilename)) {
@@ -40,6 +46,21 @@ public class FileProtocolUtils {
     }
 
     return new FileInputStream(makeFileLoc(selectedFilename));
+  }
+
+  public static void deleteServiceStorageDir() {
+    var directoryLocation = makeServiceStorageDir();
+    File directory = new File(directoryLocation);
+    if (directory.exists()) {
+      try {
+        FileUtils.deleteDirectory(directory);
+        LOG.info("Directory %s was removed sucessfully".formatted(directoryLocation));
+      } catch (IOException e) {
+        LOG.error("There was a problem removing the directory %s".formatted(directoryLocation), e);
+      }
+    } else {
+      LOG.info("Tried to delete directory %s but it did not exist".formatted(directoryLocation));
+    }
   }
 
   private static boolean isFilePresent(String selectedFilename) {
@@ -64,6 +85,7 @@ public class FileProtocolUtils {
         + File.separator
         + "service";
   }
+
 
   private static String makeFileLoc(String filename) {
     return makeServiceStorageDir() + File.separator + filename;

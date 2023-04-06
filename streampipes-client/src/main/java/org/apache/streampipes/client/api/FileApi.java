@@ -30,7 +30,15 @@ public class FileApi extends AbstractClientApi {
   }
 
   public byte[] getFileContent(String filename) {
-    return new BinaryGetRequest(clientConfig, getBaseResourcePath(filename), null).executeRequest();
+    return getRequest(filename).executeRequest();
+  }
+
+  public byte[] getFileContent(String filename, FetchFileHandler handler) {
+    return handler.getFileContent(filename, getRequest(filename));
+  }
+
+  private BinaryGetRequest getRequest(String filename) {
+    return new BinaryGetRequest(clientConfig, getBaseResourcePath(filename), null);
   }
 
   public String getFileContentAsString(String filename) {

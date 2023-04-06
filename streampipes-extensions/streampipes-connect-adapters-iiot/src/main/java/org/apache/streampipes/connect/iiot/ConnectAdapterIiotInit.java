@@ -34,11 +34,15 @@ import org.apache.streampipes.connect.iiot.protocol.stream.NatsProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.TubeMQProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.pulsar.PulsarProtocol;
 import org.apache.streampipes.connect.iiot.protocol.stream.rocketmq.RocketMQProtocol;
+import org.apache.streampipes.connect.iiot.utils.FileProtocolUtils;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinition;
 import org.apache.streampipes.extensions.management.model.SpServiceDefinitionBuilder;
 import org.apache.streampipes.service.extensions.ExtensionsModelSubmitter;
 
+import jakarta.annotation.PreDestroy;
+
 public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
+
   public static void main(String[] args) {
     new ConnectAdapterIiotInit().init();
   }
@@ -66,5 +70,13 @@ public class ConnectAdapterIiotInit extends ExtensionsModelSubmitter {
         .registerAdapter(new HttpServerProtocol())
         .registerAdapter(new TubeMQProtocol())
         .build();
+  }
+
+
+  @PreDestroy
+  @Override
+  public void onExit() {
+    super.onExit();
+    FileProtocolUtils.deleteServiceStorageDir();
   }
 }

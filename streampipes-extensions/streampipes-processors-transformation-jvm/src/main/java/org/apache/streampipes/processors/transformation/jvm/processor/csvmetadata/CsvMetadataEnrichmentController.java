@@ -22,7 +22,9 @@ import org.apache.streampipes.client.StreamPipesClient;
 import org.apache.streampipes.commons.exceptions.SpRuntimeException;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOptions;
 import org.apache.streampipes.extensions.api.runtime.ResolvesContainerProvidedOutputStrategy;
+import org.apache.streampipes.extensions.management.CacheFilesUtils;
 import org.apache.streampipes.extensions.management.client.StreamPipesClientResolver;
+import org.apache.streampipes.extensions.management.util.CachedFetchFileHandler;
 import org.apache.streampipes.model.DataProcessorType;
 import org.apache.streampipes.model.graph.DataProcessorDescription;
 import org.apache.streampipes.model.graph.DataProcessorInvocation;
@@ -183,7 +185,13 @@ public class CsvMetadataEnrichmentController
 
   private String getFileContents(AbstractParameterExtractor<?> extractor) {
     String filename = extractor.selectedFilename(CSV_FILE_KEY);
-    return getStreamPipesClientInstance().fileApi().getFileContentAsString(filename);
+    var handler = new CachedFetchFileHandler();
+    var fileUtils = CacheFilesUtils.getFileContent(filename, getStreamPipesClientInstance());
+
+
+    var result = getStreamPipesClientInstance().fileApi().getFileContent(filename, handler);
+
+    return "";
   }
 
   private StreamPipesClient getStreamPipesClientInstance() {
